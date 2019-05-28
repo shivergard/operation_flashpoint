@@ -1,0 +1,29 @@
+_base = _this select 0
+
+#fillgroup
+
+#spawnleader
+"OfficerE" createUnit [getPos _base, dummygroup]
+
+;assign to other group
+_member = (units dummygroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#spawnrest
+"SoldierEB" createUnit [getPos (_base), _grp]
+
+?(count units _grp == 5):goto "groupfull"
+goto "spawnrest"
+
+#groupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+;group info
+hint format ["Group:%1 Units:%2\nLeader:%3\nGroups:%4",_grp,(count units _grp),(leader _grp),(allgroups)]
+
+[leader _grp,300,20] exec "randpatrol.sqs"
+
+EXIT

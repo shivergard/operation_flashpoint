@@ -1,0 +1,19 @@
+_camera = "camera" camCreate [6656, 256, 600]
+_camera cameraEffect ["internal", "back"]
+
+_copyright = ""
+titleText [_copyright, "plain down"]
+
+#loop
+_camera camSetTarget heli1
+_camera camSetRelPos [0, 15, 5]
+_camera camSetFOV 0.7
+_camera camCommit 3
+@camCommitted _camera
+
+? fuel heli1 < 1.0 : heli1 setFuel 1.0
+goto "loop"
+
+player cameraEffect ["terminate", "back"]
+camDestroy _camera
+exit

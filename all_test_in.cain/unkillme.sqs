@@ -1,0 +1,7 @@
+#loop
+
+tractor setDamage 0;
+barrel2 setDamage 0;
+barrel setDamage 0;
+
+goto "loop"

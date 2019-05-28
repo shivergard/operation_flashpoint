@@ -1,0 +1,25 @@
+; HIDE MANAGER
+
+
+ctrlShow [100, false]
+ctrlShow [101, false]
+ctrlShow [102, false]
+ctrlShow [103, false]
+ctrlShow [104, false]
+ctrlShow [105, false]
+ctrlShow [106, false]
+ctrlShow [107, false]
+ctrlShow [108, false]
+ctrlShow [109, false]
+ctrlShow [110, false]
+ctrlShow [111, false]
+ctrlShow [112, false]
+ctrlShow [113, false]
+ctrlShow [114, false]
+ctrlShow [115, false]
+ctrlShow [116, false]
+ctrlShow [117, false]
+ctrlShow [118, false]
+
+
+exit

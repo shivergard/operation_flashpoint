@@ -1,0 +1,256 @@
+version=11;
+class Mission
+{
+	addOns[]=
+	{
+		"hunter",
+		"bis_resistance"
+	};
+	randomSeed=12712451;
+	class Intel
+	{
+		startWeather=0.000000;
+		forecastWeather=0.000000;
+		hour=5;
+	};
+	class Groups
+	{
+		items=4;
+		class Item0
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=2;
+				class Item0
+				{
+					position[]={7823.997559,81.542313,6514.708008};
+					azimut=80.000000;
+					special="NONE";
+					id=1;
+					side="EAST";
+					vehicle="SoldierESaboteurPipe";
+					player="PLAYER COMMANDER";
+					leader=1;
+					rank="SERGEANT";
+					skill=0.916204;
+				};
+				class Item1
+				{
+					position[]={8186.236328,21.469090,4430.549316};
+					azimut=80.000000;
+					special="NONE";
+					id=2;
+					side="EAST";
+					vehicle="SoldierESaboteurPipe";
+					rank="SERGEANT";
+					skill=0.916204;
+					text="idiots1";
+				};
+			};
+		};
+		class Item1
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={7894.834961,378.785583,2624.464600};
+					special="FLY";
+					id=0;
+					side="EAST";
+					vehicle="Mi24";
+					leader=1;
+					skill=0.803045;
+					text="heli1";
+					init="this exec ""intro.sqs""; [] exec ""doomsday.sqs"";";
+				};
+			};
+			class Waypoints
+			{
+				items=7;
+				class Item0
+				{
+					position[]={7624.721680,39.525497,6524.223633};
+					speed="FULL";
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item1
+				{
+					position[]={1714.616821,52.651711,4928.033691};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item2
+				{
+					position[]={1612.800537,149.511688,11647.519531};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item3
+				{
+					position[]={9356.798828,435.002197,11871.612305};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item4
+				{
+					position[]={8940.798828,460.604980,813.140198};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item5
+				{
+					position[]={3532.799316,39.216652,1837.564941};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item6
+				{
+					position[]={7734.397949,83.353096,6514.708008};
+					type="CYCLE";
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+			};
+		};
+		class Item2
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={7607.036621,51.903831,5144.147461};
+					azimut=80.000000;
+					special="NONE";
+					id=3;
+					side="WEST";
+					vehicle="SoldierWB";
+					leader=1;
+					rank="SERGEANT";
+					skill=0.916204;
+					text="idiots2";
+				};
+			};
+		};
+		class Item3
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={6771.834473,76.891068,6968.138184};
+					azimut=80.000000;
+					special="NONE";
+					id=4;
+					side="WEST";
+					vehicle="ViewTower2";
+					leader=1;
+					rank="SERGEANT";
+					skill=0.916204;
+					text="spectator";
+				};
+			};
+		};
+	};
+	class Markers
+	{
+		items=9;
+		class Item0
+		{
+			position[]={7175.037598,68.443108,6788.948242};
+			name="ble1";
+			type="Flag";
+		};
+		class Item1
+		{
+			position[]={7715.836914,110.071350,6923.347656};
+			name="ble2";
+			type="Flag";
+		};
+		class Item2
+		{
+			position[]={7018.236328,85.452660,7096.148438};
+			name="ble3";
+			type="Flag";
+		};
+		class Item3
+		{
+			position[]={7066.237793,69.893143,7294.547852};
+			name="ble4";
+			type="Flag";
+		};
+		class Item4
+		{
+			position[]={7437.437500,90.012222,7272.147949};
+			name="ble5";
+			type="Flag";
+		};
+		class Item5
+		{
+			position[]={6835.836914,45.031410,6836.947754};
+			name="ble6";
+			type="Flag";
+		};
+		class Item6
+		{
+			position[]={7184.636719,81.509674,6612.947754};
+			name="ble7";
+			type="Flag";
+		};
+		class Item7
+		{
+			position[]={6746.237305,77.317383,7009.748047};
+			name="ble8";
+			type="Flag";
+		};
+		class Item8
+		{
+			position[]={6899.837402,79.582451,7265.748535};
+			name="ble9";
+			type="Flag";
+		};
+	};
+};
+class Intro
+{
+	randomSeed=1415683;
+	class Intel
+	{
+	};
+};
+class OutroWin
+{
+	randomSeed=7999491;
+	class Intel
+	{
+	};
+};
+class OutroLoose
+{
+	randomSeed=1415683;
+	class Intel
+	{
+	};
+};

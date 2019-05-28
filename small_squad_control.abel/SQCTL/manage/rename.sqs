@@ -1,0 +1,44 @@
+; RENAME GROUP
+
+_arr = _this
+_goto = (_arr select 0)
+
+goto _goto
+exit
+
+#rename
+; Fill input field
+ctrlSetText [103,_arr select 2]
+
+; OK button
+_action = format [{["check",%1] exec "SQCTL\manage\rename.sqs"},_arr select 1]
+buttonSetAction [104, _action]
+exit
+
+#check
+_i = _arr select 1
+_newName = ctrlText 103
+;player sidechat format ["_i: %1, _newName: %2",_i,_newName]
+?(_newName == ""): player globalchat localize "STR_SQCTL_RENAMEERROR", ["rename",_arr select 1] exec "SQCTL\manage\rename.sqs", exit
+
+(SQCTL select _i) set [1,_newName]
+exit
+
+#renameGrp
+; Fill input field
+ctrlSetText [103,_arr select 2]
+
+; OK button
+_action = format [{["checkGrp",%1] exec "SQCTL\manage\rename.sqs"},_arr select 1]
+buttonSetAction [104, _action]
+exit
+
+#checkGrp
+_i = _arr select 1
+_newName = ctrlText 103
+;player sidechat format ["_i: %1, _newName: %2",_i,_newName]
+?(_newName == ""): player globalchat localize "STR_SQCTL_RENAMEERROR", ["renameGrp",_arr select 1] exec "SQCTL\manage\rename.sqs", exit
+
+_grpArr = SQCTL select 6
+(_grpArr select _i) set [0, _newName]
+exit

@@ -1,0 +1,46 @@
+; CLEAN CARDS
+
+ctrlShow [10, false]
+ctrlSetText [11, ""]
+ctrlSetText [12, ""]
+ctrlSetText [13, ""]
+ctrlShow [13, false]
+
+ctrlShow [20, false]
+ctrlSetText [21, ""]
+ctrlSetText [22, ""]
+ctrlSetText [23, ""]
+ctrlShow [23, false]
+
+ctrlShow [30, false]
+ctrlSetText [31, ""]
+ctrlSetText [32, ""]
+ctrlSetText [33, ""]
+ctrlShow [33, false]
+
+ctrlShow [40, false]
+ctrlSetText [41, ""]
+ctrlSetText [42, ""]
+ctrlSetText [43, ""]
+ctrlShow [43, false]
+
+ctrlShow [50, false]
+ctrlSetText [51, ""]
+ctrlSetText [52, ""]
+ctrlSetText [53, ""]
+ctrlShow [53, false]
+
+ctrlShow [60, false]
+ctrlSetText [61, ""]
+ctrlSetText [62, ""]
+ctrlSetText [63, ""]
+ctrlShow [63, false]
+
+ctrlShow [70, false]
+ctrlSetText [71, ""]
+ctrlSetText [72, ""]
+ctrlSetText [73, ""]
+ctrlShow [73, false]
+
+
+exit

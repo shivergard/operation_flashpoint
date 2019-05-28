@@ -1,0 +1,131 @@
+; ADD/empty GROUP TO GROUPING
+
+_mode = _this
+_goto = (_mode select 0)
+_i = 0
+
+goto _goto
+exit
+
+#grouping
+; Fill Orders combo box
+_i = _mode select 1
+_grp = _mode select 2
+_idc1 = 107
+lbClear _idc1
+_selected = false
+_c = 0
+_sets = SQCTL select 6
+;player sidechat format ["_sets: %1",_sets]
+#addOrders
+_text = (_sets select _c) select 0
+_index = lbAdd [_idc1, _text]
+_data = format ["[%1,%2]",_i,_c]
+lbSetData [_idc1, _index, _data]
+?(!_selected): lbSetCurSel [_idc1, 0], _selected = true
+_c = _c + 1
+?(_c < (count _sets)): goto "addOrders"
+
+; Add "New set" option
+_index = lbAdd [_idc1, localize "STR_SQCTL_NEWGROUP"]
+_data = format ["[%1,%2]",_i,-1]
+lbSetData [_idc1, _index, _data]
+
+lbSetCurSel [_idc1, _grp]
+
+; Set "Add" button
+_idc2 = 108
+_text = localize "STR_SQCTL_JOIN"
+ctrlSetText [_idc2, _text] 
+_action = format [{["add",lbData [%1, lbCurSel %1]] exec "SQCTL\manage\grouping.sqs";},_idc1]
+buttonSetAction [_idc2, _action]
+exit
+
+#add
+_arr = call (_mode select 1)
+_i = _arr select 0
+_grp = _arr select 1
+?(_grp < 0): goto "create"
+(SQCTL select _i) set [5, _grp]
+exit
+
+#create
+?(_i < 51): _i = _mode select 1
+ctrlShow [106, true]
+ctrlShow [107, false]
+
+; Default name for new group
+_newName = format [localize "STR_SQCTL_GRNAMEDEF", count (SQCTL select 6)]
+ctrlSetText [106,_newName]
+
+; Set "Create" button
+_idc2 = 108
+_text = localize "STR_SQCTL_CREATE"
+ctrlSetText [_idc2, _text] 
+_action = format [{["createAdd",%1,%2] exec "SQCTL\manage\grouping.sqs";},_i,_grp]
+buttonSetAction [_idc2, _action]
+
+exit
+
+#createAdd
+ctrlShow [106, false]
+ctrlShow [107, true]
+_i = _mode select 1
+_grp = _mode select 2
+_newName = ctrlText 106
+?(_newName == ""): player globalchat localize "STR_SQCTL_RENAMEERROR", ["create",_i,_grp] exec "SQCTL\manage\grouping.sqs", exit
+
+_grpArr = SQCTL select 6
+_grpArr set [count _grpArr, [_newName,1,[-1],[1,1,1,1]]]
+(SQCTL select _i) set [5,count (SQCTL select 6) - 1]
+
+; Reset grouping menu
+["grouping",_i,count (SQCTL select 6) - 1] exec "SQCTL\manage\grouping.sqs"
+exit
+
+#createSet
+ctrlShow [106, true]
+ctrlShow [107, false]
+; Default name for new group
+_newName = format ["GROUP %1", count (SQCTL select 6)]
+ctrlSetText [106,_newName]
+
+; Set "Create" button
+_idc2 = 108
+_text = localize "STR_SQCTL_CREATE"
+ctrlSetText [_idc2, _text] 
+_action = {["createAddSet"] exec "SQCTL\manage\grouping.sqs";}
+buttonSetAction [_idc2, _action]
+exit
+
+#createAddSet
+ctrlShow [106, false]
+ctrlShow [107, true]
+_newName = ctrlText 106
+?(_newName == ""): player globalchat localize "STR_SQCTL_RENAMEERROR", ["createSet"] exec "SQCTL\manage\grouping.sqs", exit
+_grpArr = SQCTL select 6
+_grpArr set [count _grpArr, [_newName,1,[-1],[1,1,1,1]]]
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+exit
+
+#emptyGrp
+_i = _mode select 1
+; Set "empty" button
+_idc2 = 108
+_text = localize "STR_SQCTL_EMPTY"
+ctrlSetText [_idc2, _text] 
+_action = format [{["empty",%1] exec "SQCTL\manage\grouping.sqs";},_i]
+buttonSetAction [_idc2, _action]
+exit
+
+#empty
+_i = _mode select 1
+_grpArr = SQCTL select 6
+;_grpArr set [_i, -1]
+;_grpArr = _grpArr - [-1]
+;player sidechat format ["_grpArr: %1",_grpArr]
+; empty references to this group in squad arrays
+_sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice;
+{ if ((_x select 5) == _i) then { _x set [5,0] } } forEach _sqds
+exit

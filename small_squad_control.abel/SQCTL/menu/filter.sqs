@@ -1,0 +1,54 @@
+; FILTER COMBO BOX
+
+_idc = 905
+ctrlShow [_idc, true]
+_rowIndex = (SQCTL select 8)
+_newRowIndex = _rowIndex
+
+#fill
+_grps = SQCTL select 6
+_rowIndex = _rowIndex + 1
+_firstRow = if (_rowIndex <= 0) then { localize "STR_SQCTL_FILTER" } else { localize "STR_SQCTL_REMOVEFILTER" }
+_grps = [[_firstRow]] + _grps
+
+lbClear _idc
+_c = 0
+#addRow
+_text = (_grps select _c) select 0
+_index = lbAdd [_idc, _text]
+_data = format ["%1",_c]
+lbSetData [_idc, _index, _data]
+_c = _c + 1
+?(_c < (count _grps)): goto "addRow"
+lbSetCurSel [_idc, _rowIndex]
+_rowIndex = lbCurSel _idc
+
+#loop
+_newRowIndex = lbCurSel _idc
+?(_newRowIndex != _rowIndex): goto "filter"
+~0.5
+?(ctrlVisible 0 and !(SQCTL select 7)): goto "loop"
+goto "hide"
+
+#filter
+_showAll = if (_newRowIndex == 0) then { true } else { false } 
+_rowIndex = _newRowIndex - 1
+;player sidechat format ["set _rowIndex: %1",_rowIndex]
+SQCTL set [8,_rowIndex]
+
+; Reset row index
+(SQCTL select 5) set [0,0]
+
+; Hide orders menu
+[] exec "SQCTL\orders\hideOrders.sqs"
+
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+
+
+goto "fill"
+
+#hide
+ctrlShow [_idc, false]
+
+exit

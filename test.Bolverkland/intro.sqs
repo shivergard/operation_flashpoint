@@ -1,0 +1,36 @@
+IntroCamera = "seagull" camCreate [7894.834961,378.785583,2624.464600]
+
+IntroCamera = "camera" camCreate [6656, 256, 600]
+
+IntroCamera cameraEffect ["internal", "back"]
+
+_copyright = ""
+gender = "";
+randomNum = 0;
+titleText [_copyright, "plain down"]
+
+cameraTargeted = 0;
+
+#loop
+
+?(cameraTargeted == 0 ):IntroCamera camSetTarget spectator;
+
+?(cameraTargeted == 0 && !(gender == "")): nearLivePerson = nearestObject [spectator, (format ["%1%2", gender , randomNum])]
+?(cameraTargeted == 0 && !(gender == "") && alive nearLivePerson ): IntroCamera camSetTarget nearLivePerson ;
+?(cameraTargeted == 0 && !(gender == "") && (alive nearLivePerson) ): cameraTargeted = 1;
+
+?(cameraTargeted == 1 && !(alive nearLivePerson) ) : cameraTargeted = 0;
+
+IntroCamera camSetRelPos [0, 15, 35]
+IntroCamera camSetFOV 0.7
+IntroCamera camCommit 3
+@camCommitted IntroCamera
+
+
+?(cameraTargeted == 1 && gender == "removetokill"): nearLivePerson setDamage 1;
+
+goto "loop"
+
+player cameraEffect ["terminate", "back"]
+camDestroy IntroCamera
+exit

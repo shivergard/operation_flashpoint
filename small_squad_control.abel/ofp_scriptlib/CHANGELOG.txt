@@ -1,0 +1,30 @@
+Version 1.4:
+ADDED: m_v?length and m_v?normalize (where ? is one of 2, 3, 4)
+IMPROVED: code of f_decomposeVelocity
+ADDED: f_dBm, f_from_dBm (converting from/to power and dBm)
+ADDED: f_listMapIf
+ADDED: f_listRange
+FIXED: some functions didn't declare local variables as private
+ADDED: f_listFold, f_listFold1
+ADDED: f_randomPos2D
+ADDED: f_nth
+ADDED: f_listLookup, f_listLookupSet
+ADDED: f_listExtend
+CHANGED: renamed f_listSubArray to f_listSlice
+CHANGED: f_getPosASL returns [x, y, heightASL] like CWA getPosASL
+ADDED: f_getHeightASL returns heightASL like f_getPosASL formerly
+
+Version 1.3:
+- FIXED: some vector functions from math.sqf were not generated correctly
+- ADDED: f_decomposeVelocity
+
+Version 1.2:
+- CHANGED: renamed f_listVehicles to f_groupVehicles
+- ADDED: f_sample
+- ADDED: f_shuffle
+- ADDED: f_getClickedGroup
+- ADDED: f_filterGroups
+- ADDED: f_listInsert
+- ADDED: f_listUniquify
+- CHANGED: renamed f_getElevASL to f_getElev
+- ADDED: f_checkTerrainMasking

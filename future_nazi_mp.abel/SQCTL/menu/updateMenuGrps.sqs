@@ -1,0 +1,122 @@
+; UPDATE SQUAD CONTROL MENU - GROUPS
+
+; Update SQ/GRP button control
+SQCTL set [7, true]
+_idc = 904
+_text = if !(SQCTL select 7) then { localize "STR_SQCTL_GROUPS" } else { localize "STR_SQCTL_SQUADS" }
+ctrlSetText [_idc, _text] 
+_action = {[] exec "SQCTL\menu\updateMenu.sqs"}
+buttonSetAction [_idc, _action]
+
+; Clean the squad and menu cards
+[] exec "SQCTL\menu\cleanCards.sqs"
+
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+
+; Hide orders menu
+[] exec "SQCTL\orders\hideOrders.sqs"
+
+; Hide filter list
+ctrlShow [905, false]
+
+; Hide player button
+ctrlShow [14, false]
+
+~0.3
+
+; Set scroll buttons
+; Previous
+_idc = 901
+_action = {["previousGR"] exec "SQCTL\menu\navButtons.sqs"}
+buttonSetAction [_idc, _action]
+; Next
+_idc = 902
+_action = {["nextGR"] exec "SQCTL\menu\navButtons.sqs"}
+buttonSetAction [_idc, _action]
+
+_wait = 0.5
+#loop
+_card = 1
+_minSqInd = 1
+_maxSqInd = count (SQCTL select 6)
+_i = (SQCTL select 5) select 1
+_sQi = _minSqInd + _i
+?(_sQi < _minSqInd): _sQi = _minSqInd
+_maxRow = 7
+_orders = call loadfile "SQCTL\orders\orders.sqf"
+
+	#fill
+	_idc = (_card*10)
+	_idc1 = _idc + 1
+	_idc2 = _idc + 2
+	_idc3 = _idc + 3
+	
+	?(_sQi >= _maxSqInd): goto "cleanEmpty"
+	
+	_grpArr = ((SQCTL select 6) select _sQi)
+	_name = _grpArr select 0
+	_order = _grpArr select 1
+	;player sidechat format ["_idc: %1",_idc]
+	
+	ctrlShow [_idc, true]
+	
+;		Set group name and grouping
+		ctrlSetText [_idc1, _name]
+		
+; 		Set name button action
+		_action = format [{[%1,-1,"%2","group"] exec "SQCTL\manage\manage.sqs"},_sQi, ctrlText _idc1]
+		buttonSetAction [_idc1, _action]
+		
+; 		Create status string
+		_txt = ""
+
+; 		Current order
+		?(_order > 0): _txt = _txt + format ["%1\n",(_orders select _order) select 1]
+		
+; 		Set composition
+		_sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice;
+		_sqArr = []
+		{ if ((_x select 5) == _sQi) then { _sqArr set [count _sqArr,_x] } } forEach _sqds
+		_sqC = 1
+		{ if (_sqC < 4) then { _txt = _txt + format ["%1\n",_x select 1] } else { if (_sqC == 4) then { _txt = _txt + "...\n" } }; _sqC = _sqC + 1 } forEach _sqArr
+		
+; 		Set status string
+		ctrlSetText [_idc2, _txt]
+		?(count _sqArr < 1): ctrlShow [_idc3, false], goto "add"
+		
+; 		Set button action
+		ctrlShow [_idc3, true]
+		ctrlSetText [_idc3, localize "STR_SQCTL_ORDER"]
+		_action = format [{[%1,"group"] exec "SQCTL\orders\orders.sqs"},_sQi]
+		buttonSetAction [_idc3, _action]
+		goto "add"
+		
+		#cleanEmpty
+		; Clean empty cards
+		ctrlShow [_idc, false]
+		ctrlSetText [_idc1, ""]
+		ctrlSetText [_idc2, ""]
+		ctrlSetText [_idc3, ""]
+		ctrlShow [_idc3, false]
+		?(_sQi == _maxSqInd): goto "newGroup"
+	
+	#add
+	_sQi = _sQi + 1
+	_card = _card + 1
+	?(_card <= _maxRow): goto "fill"
+
+	~_wait
+?(ctrlVisible 0 and (SQCTL select 7) and alive player): goto "loop"
+
+exit
+
+#newGroup
+; Set "CREATE" button
+_i = (_card)
+_idc3 = (_i*10) + 3
+ctrlShow [_idc3, true]
+ctrlSetText [_idc3, localize "STR_SQCTL_CREATE"]
+_action = {[-1,-1,"","createSet"] exec "SQCTL\manage\manage.sqs"}
+buttonSetAction [_idc3, _action]
+goto "add"

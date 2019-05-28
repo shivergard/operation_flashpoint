@@ -1,0 +1,58 @@
+; MANAGE GROUP
+
+_i = _this select 0
+_grp = _this select 1
+_txt = _this select 2
+_mode = if (count _this > 3) then { _this select 3 } else { "" }
+
+; Hide orders menu
+[] exec "SQCTL\orders\hideOrders.sqs"
+
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+~0.2
+
+; Show menu
+ctrlShow [100, true]
+ctrlShow [101, true]
+?(_mode != "createSet"): ctrlShow [102, true]
+?(_mode != "createSet"): ctrlShow [103, true]
+?(_mode != "createSet"): ctrlShow [104, true]
+?(_mode != "HQ"): ctrlShow [105, true]
+?(_mode != "group"): ctrlShow [106, false]
+?(_mode != "group" and _mode != "HQ"): ctrlShow [107, true]
+?(_mode != "HQ"): ctrlShow [108, true]
+?(_mode == "createSet"): ["createSet"] exec "SQCTL\manage\grouping.sqs",exit
+?(_mode != "group"): ctrlShow [109, true]
+?(_mode != "group"): ctrlShow [110, true]
+?(_mode != "group"): ctrlShow [111, true]
+?(_mode != "group"): ctrlShow [118, true]
+?(_mode != "group"): ctrlShow [112, true]
+ctrlShow [113, false]
+ctrlShow [114, false]
+ctrlShow [115, false]
+ctrlShow [116, false]
+ctrlShow [117, false]
+
+; Roster
+?(_mode == "" or _mode == "HQ"): [_i] exec "SQCTL\manage\roster.sqs"
+
+; Rename
+_renMode = if (_mode != "group") then { "rename" } else { "renameGrp" }
+[_renMode,_i,_txt] exec "SQCTL\manage\rename.sqs"
+
+; Group
+_grpMode = if (_mode != "group") then { "grouping" } else { "emptyGrp" }
+[_grpMode,_i,_grp] exec "SQCTL\manage\grouping.sqs"
+
+; Set "Close" button
+_action = {[] exec "SQCTL\manage\hideManager.sqs"}
+buttonSetAction [112, _action]
+
+
+; Update last squad index
+SQCTL set [3,_i]
+
+
+
+exit

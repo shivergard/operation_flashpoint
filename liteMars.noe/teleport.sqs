@@ -1,0 +1,78 @@
+#teleport
+
+matrix1 setpos (getMarkerPos "ble")
+matrix2 setpos (getMarkerPos "ble2")
+matrix3 setpos (getMarkerPos "ble3")
+matrix4 setpos (getMarkerPos "ble4")
+matrix5 setpos (getMarkerPos "ble5")
+matrix6 setpos (getMarkerPos "ble6")
+matrix7 setpos (getMarkerPos "ble7")
+
+~20
+
+matrix1 setpos (getMarkerPos "ble2")
+matrix2 setpos (getMarkerPos "ble3")
+matrix3 setpos (getMarkerPos "ble4")
+matrix4 setpos (getMarkerPos "ble5")
+matrix5 setpos (getMarkerPos "ble6")
+matrix6 setpos (getMarkerPos "ble7")
+matrix7 setpos (getMarkerPos "ble")
+
+
+~20
+
+matrix1 setpos (getMarkerPos "ble3")
+matrix2 setpos (getMarkerPos "ble4")
+matrix3 setpos (getMarkerPos "ble5")
+matrix4 setpos (getMarkerPos "ble6")
+matrix5 setpos (getMarkerPos "ble7")
+matrix6 setpos (getMarkerPos "ble")
+matrix7 setpos (getMarkerPos "ble2")
+~20
+
+matrix1 setpos (getMarkerPos "ble4")
+matrix2 setpos (getMarkerPos "ble5")
+matrix3 setpos (getMarkerPos "ble6")
+matrix4 setpos (getMarkerPos "ble7")
+matrix5 setpos (getMarkerPos "ble")
+matrix6 setpos (getMarkerPos "ble2")
+matrix7 setpos (getMarkerPos "ble3")
+~20
+
+matrix1 setpos (getMarkerPos "ble5")
+matrix2 setpos (getMarkerPos "ble6")
+matrix3 setpos (getMarkerPos "ble7")
+matrix4 setpos (getMarkerPos "ble")
+matrix5 setpos (getMarkerPos "ble2")
+matrix6 setpos (getMarkerPos "ble3")
+matrix7 setpos (getMarkerPos "ble4")
+~20
+
+matrix1 setpos (getMarkerPos "ble6")
+matrix2 setpos (getMarkerPos "ble7")
+matrix3 setpos (getMarkerPos "ble")
+matrix4 setpos (getMarkerPos "ble2")
+matrix5 setpos (getMarkerPos "ble3")
+matrix6 setpos (getMarkerPos "ble4")
+matrix7 setpos (getMarkerPos "ble5")
+
+~20
+
+matrix1 setpos (getMarkerPos "ble7")
+matrix2 setpos (getMarkerPos "ble")
+matrix3 setpos (getMarkerPos "ble2")
+matrix4 setpos (getMarkerPos "ble3")
+matrix5 setpos (getMarkerPos "ble4")
+matrix6 setpos (getMarkerPos "ble5")
+matrix7 setpos (getMarkerPos "ble6")
+~20
+
+matrix1 setDamage 0;
+matrix2 setDamage 0;
+matrix3 setDamage 0;
+matrix4 setDamage 0;
+matrix5 setDamage 0;
+matrix6 setDamage 0;
+matrix7 setDamage 0;
+
+goto "teleport"

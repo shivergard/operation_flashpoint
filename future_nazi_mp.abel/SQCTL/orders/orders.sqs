@@ -1,0 +1,41 @@
+; ORDERS
+
+_i = _this select 0
+_mode = if (count _this > 1) then { _this select 1 } else { "" }
+?(_mode == ""): _grpArr = SQCTL select _i, _grp = _grpArr select 0, _pos = (getPos leader _grp), _objPos = (_grpArr select 3) select 1, if ((_objPos select 0) >= 0) then { _pos = _objPos }
+
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+
+; Update last squad index
+SQCTL set [3,_i]
+
+; Open map if closed
+?!(SQCTL select 1): [] exec "SQCTL\map\showMap.sqs"
+
+; Center map on group
+?(_mode == "group"): _sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice, _sqArr = [], _sqC = 0,{ if ((_x select 5) == _i) then { _sqArr set [count _sqArr,[_x,_sqC+1]] }; _sqC = _sqC + 1 } forEach _sqds, _pos = getPos (leader (((_sqArr select 0) select 0) select 0)), _objPos = ((SQCTL select 6) select _i) select 2, if ((_objPos select 0) >= 0) then { _pos = _objPos }
+_mrkr = "SQCTL_mapControl"
+_mrkr setMarkerPos _pos
+?(_mode == ""): _zoom = 0.1
+?(_mode == "group"): _zoom = 0.15
+SQCTL set [2,_zoom]
+mapAnimAdd [1, _zoom, markerPos _mrkr]
+mapAnimCommit
+
+; Blink group marker
+?(_mode == ""): _grpMrkr = format ["SQCTL_gMrkr_%1",(_i - 51) + 1], [_grpMrkr] exec "SQCTL\map\blinkMarker.sqs"
+?(_mode == "group"): { _grpMrkr = format ["SQCTL_gMrkr_%1",(_x select 1)], [_grpMrkr,5] exec "SQCTL\map\blinkMarker.sqs" } forEach _sqArr, _sqArr1 = [], { _sqArr1 set [count _sqArr1, 51 + (_x select 1) - 1] } forEach _sqArr
+
+; Display hint
+_idc = 9
+_txt = localize "STR_SQCTL_HINT1"
+ctrlSetText [_idc, _txt] 
+[_idc] exec "SQCTL\menu\hideHint.sqs"
+
+; Show orders menu
+_ordersMode = if (SQCTL select 11) then { "advanced" } else { "simple" }
+?(_mode == ""): [_i,_ordersMode] exec "SQCTL\orders\showOrders.sqs"
+?(_mode == "group"): [_i,_sqArr1,_ordersMode] exec "SQCTL\orders\showOrdersGrp.sqs"
+
+exit

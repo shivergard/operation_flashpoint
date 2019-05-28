@@ -1,0 +1,81 @@
+#doomsday
+
+western = 0;
+
+#fillgroup
+
+
+randomIdiotsNum = (random 10) + 1;
+randomIdiotsNum = randomIdiotsNum - randomIdiotsNum % 1;
+
+westernPolice = 0;
+dummygroup = group idiots2;
+officerName = "OfficerE";
+
+?(randomIdiotsNum > 5):dummygroup = group idiots1;
+?(randomIdiotsNum > 5):westernPolice = 1;
+?(randomIdiotsNum > 5):officerName = "OfficerW";
+
+
+
+randomBleNum = (random 9) + 1;
+randomBleNum = randomBleNum - randomBleNum % 1;
+
+spectator setpos (getMarkerPos (format ["ble%1" , randomBleNum]))
+
+
+#spawnleader
+officerName createUnit [(getMarkerPos (format ["ble%1" , randomBleNum])), dummygroup]
+;assign to other group
+_member = (units dummygroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#spawnrest
+
+
+gender = "Woman";
+
+randomGender = random 3;
+
+?(randomGender > 1):gender = "Civilian";
+?(randomGender > 2):gender = "Hunter";
+ 
+randomNum = (random 5) + 1;
+?(gender == "Civilian" ):randomNum = (random 11) + 1;
+
+randomNum = randomNum - randomNum % 1;
+
+?(gender == "Civilian" && randomNum == 1 ):randomNum = 2;
+?(gender == "Hunter" ):randomNum = "";
+
+randomWeapon = random 3;
+
+weapons = "this addMagazine ""Ak74""; this addMagazine ""Ak74"";  this addWeapon ""Ak74"";";
+?(randomWeapon > 1):weapons = "this addWeapon ""CZ75""; this addMagazine ""CZ75""; ";
+
+?(westernPolice == 1):gender = "Civilian11";
+?(westernPolice == 1):randomNum = "";
+?(westernPolice == 1):western = western + 1;
+
+newunit = format ["%1%2", gender , randomNum] createUnit [(getMarkerPos (format ["ble%1" , randomBleNum])), _grp , weapons];
+
+
+
+?(count units _grp == 5):goto "groupfull"
+goto "spawnrest"
+
+#groupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+;group info
+hint format ["Group:%1 at %5 Units:%2 \nLeader:%3 \nGroups:%4 \nwestern:%6",_grp,(count units _grp),(leader _grp),(count allgroups) , (format ["ble%1" , randomBleNum]) , (format ["!%1" , western])]
+
+[leader _grp,300,20] exec "randpatrol.sqs"
+
+~10
+
+
+goto "doomsday"

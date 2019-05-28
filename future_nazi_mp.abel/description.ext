@@ -1,0 +1,1296 @@
+#define ST_LEFT      0
+#define ST_RIGHT     1
+#define ST_CENTER    2
+#define ST_MULTI        16
+#define ST_SHADOW       256
+#define ST_NO_RECT      512
+#define CT_STATIC    0
+#define ST_PICTURE   48
+#define FontM "tahomaB36"
+#define FontHTML "CourierNewB64"
+#define CT_ACTIVETEXT 11
+#define CT_BUTTON   1
+#define ST_FRAME   64
+#define CT_EDIT    2
+#define CT_COMBO                 4
+#define CT_LISTBOX               5
+#define CT_SLIDER     3
+#define ST_HPOS       0x0F
+
+respawn = "SIDE";
+
+class RscText
+{
+        type = CT_STATIC;
+        idc = -1;
+        style = ST_LEFT;
+        colorBackground[] = {0, 0, 0, 0};
+        colorText[] = {1, 1, 1, 1};
+        font = FontM;
+        sizeEx = 0.04;
+};
+
+class RscPicture
+{
+        type = CT_STATIC;
+        idc = -1;
+        style = ST_PICTURE;
+        colorBackground[] = {0, 0, 0, 0};
+        colorText[] = {1, 1, 1, 1};
+        font = FontM;
+        sizeEx = 0.04;
+};
+
+class RscActiveText
+{
+        type = CT_ACTIVETEXT;
+        idc = -1;
+        style = ST_LEFT;
+        color[] = {1, 1, 1, 1};
+        colorActive[] = {1, 0, 0, 1};
+        font = FontM;
+        sizeEx = 0.04;
+        soundEnter[] = {"ui\ui_over", 0.2, 1};
+        soundPush[] = {, 0.2, 1};
+        soundClick[] = {"ui\ui_ok", 0.2, 1};
+        soundEscape[] = {"ui\ui_cc", 0.2, 1};
+        default = false;
+};
+
+class RscButton
+{
+        type = CT_BUTTON;
+        idc = -1;
+        style = ST_CENTER;
+        colorText[] = {0, 0, 0, 1};
+        font = FontHTML;
+        sizeEx = 0.025;
+        soundPush[] = {, 0.2, 1};
+        soundClick[] = {"ui\ui_ok", 0.2, 1};
+        soundEscape[] = {"ui\ui_cc", 0.2, 1};
+        default = false;
+};
+
+class RscFrame
+{
+        type = CT_STATIC;
+        idc = -1;
+        style = ST_FRAME;
+        colorBackground[] = {0, 0, 0, 0};
+        colorText[] = {1, 1, 1, 1};
+        font = FontM;
+        sizeEx = 0.04;
+};
+
+class RscEdit
+{
+       type = CT_EDIT;
+       idc = -1;
+       style = ST_LEFT;
+       font = FontHTML;
+       sizeEx = 0.02;
+       colorText[] = {0, 0, 0, 1};
+       colorSelection[] = {0.5, 0.5, 0.5, 1};
+       autocomplete = false;
+       text = ;
+};
+
+class RscLB_C
+{
+        style = ST_LEFT;
+        idc = -1;
+        colorSelect[] = {0.4, 0.4, 0.4, 1};
+        colorSelectBackground[] = {0.2, 0.2, 0.2, 1};
+        colorText[] = {0.2, 0.2, 0.2, 1};
+        colorBackground[] = {0.4, 0.4, 0.4, 1};
+        font = FontHTML;
+        sizeEx = 0.025;
+        rowHeight = 0.04;
+};
+
+class RscListBox: RscLB_C
+{
+        type = CT_LISTBOX;
+};
+
+class RscCombo: RscLB_C
+{
+        type = CT_COMBO;
+        wholeHeight = 0.3;
+};
+
+class RscSliderH
+{
+            type = CT_SLIDER;
+            style = ST_HPOS;
+            color[] = {0.2, 0.2, 0.2, 1};
+            idc = -1;
+            sizeEx = 0.025;
+};
+
+class SQCTL_MENU
+{
+  idd = -1;
+  movingEnable = true;
+  controlsBackground[] = {DLG_BACK1, SQCTL_BACKG0, SQCTL_SQ1BACKG, SQCTL_ORDERS_BG, SQCTL_MANAGE_BG, SQCTL_ORDERSEXP_BG, SQCTL_SQ1BACKG_23, SQCTL_SQ1BACKG_23_27, SQCTL_SQ1BACKG_23_27_34, SQCTL_SQ1BACKG_23_27_34_38, SQCTL_SQ1BACKG_23_27_34_38_42, SQCTL_SQ1BACKG_23_27_34_38_42_46, SQCTL_MANAGE_TRANSFER_BG, SQCTL_MNG_TRANSFER_BG};
+  objects[] = { };
+  controls[] = {SQCTL_TXT1, SQCTL_SQ1NAME, SQCTL_SQ1SIZETXT1, SQCTL_SQ1BUTTON1, SQCTL_MAPMOVE_UP, SQCTL_MAPMOVE_DOWN, SQCTL_MAPMOVE_LEFT, SQCTL_MAPMOVE_RIGHT, SQCTL_HINT, SQCTL_MAPMOVE_ZOOMIN, SQCTL_MAPMOVE_ZOOMOUT, SQCTL_MAPHIDE, SQCTL_ORDERS_TXT, SQCTL_ORDERS_BUTTON, SQCTL_MANAGE_TXT, SQCTL_MNG_RENAME_INPUT, SQCTL_MNG_RENAME_OK, SQCTL_SQ1NAME_24, SQCTL_SQ1SIZETXT1_25, SQCTL_SQ1BUTTON1_26, SQCTL_SQ1NAME_24_28, SQCTL_SQ1SIZETXT1_25_29, SQCTL_SQ1BUTTON1_26_30, SQCTL_OPTIONS, SQCTL_ORDERS_BUTTON_32, SQCTL_ORDERS_BUTTON_32_33, SQCTL_SQ1NAME_24_28_35, SQCTL_SQ1SIZETXT1_25_29_36, SQCTL_SQ1BUTTON1_26_30_37, SQCTL_SQ1NAME_24_28_35_39, SQCTL_SQ1SIZETXT1_25_29_36_40, SQCTL_SQ1BUTTON1_26_30_37_41, SQCTL_SQ1NAME_24_28_35_39_43, SQCTL_SQ1SIZETXT1_25_29_36_40_44, SQCTL_SQ1BUTTON1_26_30_37_41_45, SQCTL_SQ1NAME_24_28_35_39_43_47, SQCTL_SQ1SIZETXT1_25_29_36_40_44_48, SQCTL_SQ1BUTTON1_26_30_37_41_45_49, SQCTL_ORDERS_TXT_52, SQCTL_SELECTALL_53, SQCTL_MNG_GROUP_TXT, SQCTL_MNG_GRP_COMBO, SQCTL_MNG_GROUP_BUTTON, SQCTL_MNG_GROUP_INPUT, SQCTL_ORDERS_LISTBOX, SQCTL_ORDERS_FORM_LISTBOX_61, SQCTL_ORDERS_FORM_LISTBOX_61_61, SQCTL_ORDERS_TXT_52_62, SQCTL_ORDERS_TXT_52_63, SQCTL_ORDERS_TXT_52_64, SQCTL_ORDERS_FORM_LISTBOX_61_61_65, SQCTL_ORDERS_FORM_LISTBOX_61_61_66, SQCTL_ORDERS_BUTTON_68, SQCTL_FILTER_COMBO, SQCTL_ORDERS_BUTTON_70, SQCTL_MNG_ROSTER_COMBO, SQCTL_MNG_ROSTER_TXT, SQCTL_MNG_RENAME_TXT, SQCTL_MNG_ROSTER_BUTTON, SQCTL_MNG_TRANSFER_TXT, SQCTL_MNG_TRANSFER_COMBO, SQCTL_MNG_TRASNFER_CANCEL_BUTTON, SQCTL_MNG_TRANSFER_OK_BUTTON, SQCTL_MANAGE_BUTTON, SQCTL_PLAYERGROUP_BUTTON};
+
+  class DLG_BACK1: RscText
+  {
+     colorBackground[] = {0, 0, 0, 0.75};
+     text = ;
+     x = 0.01;
+     y = 0.02001;
+     w = 0.9725;
+     h = 0.14503;
+  };
+ class SQCTL_BACKG0 : RscText
+ {
+  x = 0.01
+  y = 0.02001
+  idc = 0
+  w = 0.9725
+  h = 0.14503
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {0, 0, 0, 0.75};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_TXT1 : RscText
+ {
+  x = 0.01
+  y = 0
+  idc = 1
+  w = 0.966
+  h = 0.037
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {0, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "SQUADS UNDER YOUR CONTROL"
+  };
+ class SQCTL_SQ1BACKG : RscText
+ {
+  x = 0.05
+  y = 0.03002
+  idc = 10
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME : RscActiveText
+ {
+  x = 0.05
+  y = 0.03002
+  idc = 11
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1 : RscText
+ {
+  x = 0.05
+  y = 0.05003
+  idc = 12
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1 : RscButton
+ {
+  x = 0.06
+  y = 0.12995
+  idc = 13
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPMOVE_UP : RscButton
+ {
+  x = 0.91
+  y = 0.22001
+  idc = 3
+  w = 0.047
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "^"
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPMOVE_DOWN : RscButton
+ {
+  x = 0.91
+  y = 0.30994
+  idc = 4
+  w = 0.047
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "V"
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPMOVE_LEFT : RscButton
+ {
+  x = 0.89
+  y = 0.25003
+  idc = 5
+  w = 0.03
+  h = 0.06
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "<"
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPMOVE_RIGHT : RscButton
+ {
+  x = 0.95
+  y = 0.25003
+  idc = 6
+  w = 0.03
+  h = 0.06
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ">"
+ action = ""
+ default = false
+  };
+ class SQCTL_HINT : RscText
+ {
+  x = 0.48
+  y = 0.66004
+  idc = 9
+  w = 0.298
+  h = 0.263
+  style = ST_LEFT + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_MAPMOVE_ZOOMIN : RscButton
+ {
+  x = 0.92
+  y = 0.25003
+  idc = 7
+  w = 0.031
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "+"
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPMOVE_ZOOMOUT : RscButton
+ {
+  x = 0.92
+  y = 0.28005
+  idc = 8
+  w = 0.031
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "-"
+ action = ""
+ default = false
+  };
+ class SQCTL_MAPHIDE : RscButton
+ {
+  x = 0.9
+  y = 0.16998
+  idc = 2
+  w = 0.072
+  h = 0.034
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "Hide Map"
+ action = ""
+ default = false
+  };
+ class SQCTL_ORDERS_BG : RscText
+ {
+  x = 0.74
+  y = 0.16998
+  idc = 200
+  w = 0.1425
+  h = 0.26511
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 0, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_ORDERS_TXT : RscText
+ {
+  x = 0.76
+  y = 0.16998
+  idc = 201
+  w = 0.116
+  h = 0.037
+  style = ST_RIGHT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.02
+ text = "ORDER"
+  };
+ class SQCTL_ORDERS_BUTTON : RscButton
+ {
+  x = 0.78
+  y = 0.35997
+  idc = 203
+  w = 0.072
+  h = 0.02534
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "ISSUE"
+ action = ""
+ default = false
+  };
+ class SQCTL_MANAGE_BG : RscText
+ {
+  x = 0.05
+  y = 0.16998
+  idc = 100
+  w = 0.1775
+  h = 0.20078
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 0, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_MANAGE_TXT : RscText
+ {
+  x = 0.06
+  y = 0.16998
+  idc = 101
+  w = 0.157
+  h = 0.02
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.02
+ text = "MANAGE"
+  };
+ class SQCTL_MNG_RENAME_INPUT : RscEdit
+ {
+  x = 0.06
+  y = 0.22001
+  idc = 103
+  w = 0.15
+  h = 0.025
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {0.5, 0.5, 0.5, 1};
+  };
+ class SQCTL_MNG_RENAME_OK : RscButton
+ {
+  x = 0.1
+  y = 0.25003
+  idc = 104
+  w = 0.078
+  h = 0.02534
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "OK"
+ action = ""
+ default = false
+  };
+ class SQCTL_ORDERSEXP_BG : RscText
+ {
+  x = 0.29
+  y = 0.16998
+  idc = 212
+  w = 0.4475
+  h = 0.1423
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 0, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1BACKG_23 : RscText
+ {
+  x = 0.17
+  y = 0.03002
+  idc = 20
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24 : RscActiveText
+ {
+  x = 0.17
+  y = 0.03002
+  idc = 21
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25 : RscText
+ {
+  x = 0.17
+  y = 0.05003
+  idc = 22
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26 : RscButton
+ {
+  x = 0.18
+  y = 0.12995
+  idc = 23
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1BACKG_23_27 : RscText
+ {
+  x = 0.29
+  y = 0.03002
+  idc = 30
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24_28 : RscActiveText
+ {
+  x = 0.29
+  y = 0.03002
+  idc = 31
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25_29 : RscText
+ {
+  x = 0.29
+  y = 0.05003
+  idc = 32
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26_30 : RscButton
+ {
+  x = 0.3
+  y = 0.12995
+  idc = 33
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_OPTIONS : RscButton
+ {
+  x = 0.92
+  y = 0.11995
+  idc = 903
+  w = 0.05125
+  h = 0.03106
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.016
+ text = "OPTIONS"
+ action = ""
+ default = false
+  };
+ class SQCTL_ORDERS_BUTTON_32 : RscButton
+ {
+  x = 0.02
+  y = 0.09994
+  idc = 901
+  w = 0.021
+  h = 0.053
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "<<"
+ action = ""
+ default = false
+  };
+ class SQCTL_ORDERS_BUTTON_32_33 : RscButton
+ {
+  x = 0.89
+  y = 0.10006
+  idc = 902
+  w = 0.02125
+  h = 0.05367
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ">>"
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1BACKG_23_27_34 : RscText
+ {
+  x = 0.41
+  y = 0.03002
+  idc = 40
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24_28_35 : RscActiveText
+ {
+  x = 0.41
+  y = 0.03002
+  idc = 41
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25_29_36 : RscText
+ {
+  x = 0.41
+  y = 0.05003
+  idc = 42
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26_30_37 : RscButton
+ {
+  x = 0.42
+  y = 0.12995
+  idc = 43
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1BACKG_23_27_34_38 : RscText
+ {
+  x = 0.53
+  y = 0.03002
+  idc = 50
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24_28_35_39 : RscActiveText
+ {
+  x = 0.53
+  y = 0.03002
+  idc = 51
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25_29_36_40 : RscText
+ {
+  x = 0.53
+  y = 0.05003
+  idc = 52
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26_30_37_41 : RscButton
+ {
+  x = 0.54
+  y = 0.12995
+  idc = 53
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1BACKG_23_27_34_38_42 : RscText
+ {
+  x = 0.65
+  y = 0.03002
+  idc = 60
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24_28_35_39_43 : RscActiveText
+ {
+  x = 0.65
+  y = 0.03002
+  idc = 61
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25_29_36_40_44 : RscText
+ {
+  x = 0.65
+  y = 0.05003
+  idc = 62
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26_30_37_41_45 : RscButton
+ {
+  x = 0.66
+  y = 0.12995
+  idc = 63
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1BACKG_23_27_34_38_42_46 : RscText
+ {
+  x = 0.77
+  y = 0.03002
+  idc = 70
+  w = 0.111
+  h = 0.132
+  style = ST_FRAME
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {1, 1, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_SQ1NAME_24_28_35_39_43_47 : RscActiveText
+ {
+  x = 0.77
+  y = 0.03002
+  idc = 71
+  w = 0.112
+  h = 0.02
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  colorActive[] = {1, 1, 0, 1};
+ action = ""
+ default = false
+  };
+ class SQCTL_SQ1SIZETXT1_25_29_36_40_44_48 : RscText
+ {
+  x = 0.77
+  y = 0.05003
+  idc = 72
+  w = 0.112
+  h = 0.076
+  style = ST_CENTER + ST_MULTI + ST_NO_RECT
+   linespacing = 0.8
+  colorText[] = {0.752, 0.752, 0.752, 1};
+  colorBackground[] = {1, 0, 0, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+  };
+ class SQCTL_SQ1BUTTON1_26_30_37_41_45_49 : RscButton
+ {
+  x = 0.78
+  y = 0.12995
+  idc = 73
+  w = 0.093
+  h = 0.03
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = ""
+ action = ""
+ default = false
+  };
+ class SQCTL_ORDERS_TXT_52 : RscText
+ {
+  x = 0.63
+  y = 0.16998
+  idc = 205
+  w = 0.101
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "FORMATION"
+  };
+ class SQCTL_SELECTALL_53 : RscButton
+ {
+  x = 0.89
+  y = 0.03002
+  idc = 904
+  w = 0.08125
+  h = 0.03314
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "GROUPS"
+ action = ""
+ default = false
+  };
+ class SQCTL_MNG_GROUP_TXT : RscText
+ {
+  x = 0.06
+  y = 0.28005
+  idc = 105
+  w = 0.117
+  h = 0.03704
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "GROUP"
+  };
+ class SQCTL_MNG_GRP_COMBO : RscCombo
+ {
+  x = 0.06
+  y = 0.30994
+  idc = 107
+  w = 0.15
+  h = 0.02
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+ wholeHeight = 0.3
+  };
+ class SQCTL_MNG_GROUP_BUTTON : RscButton
+ {
+  x = 0.1
+  y = 0.33996
+  idc = 108
+  w = 0.072
+  h = 0.02534
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "ADD"
+ action = ""
+ default = false
+  };
+ class SQCTL_MNG_GROUP_INPUT : RscEdit
+ {
+  x = 0.06
+  y = 0.30994
+  idc = 106
+  w = 0.15
+  h = 0.025
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {0.5, 0.5, 0.5, 1};
+  };
+ class SQCTL_ORDERS_LISTBOX : RscListBox
+ {
+  x = 0.75
+  y = 0.2
+  idc = 202
+  w = 0.12625
+  h = 0.14997
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_ORDERS_FORM_LISTBOX_61 : RscListBox
+ {
+  x = 0.63
+  y = 0.2
+  idc = 204
+  w = 0.10125
+  h = 0.10305
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_ORDERS_FORM_LISTBOX_61_61 : RscListBox
+ {
+  x = 0.52
+  y = 0.2
+  idc = 207
+  w = 0.101
+  h = 0.103
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_ORDERS_TXT_52_62 : RscText
+ {
+  x = 0.52
+  y = 0.16998
+  idc = 206
+  w = 0.101
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "BEHAVIOR"
+  };
+ class SQCTL_ORDERS_TXT_52_63 : RscText
+ {
+  x = 0.41
+  y = 0.16998
+  idc = 208
+  w = 0.101
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "COMBAT MODE"
+  };
+ class SQCTL_ORDERS_TXT_52_64 : RscText
+ {
+  x = 0.3
+  y = 0.16998
+  idc = 210
+  w = 0.101
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "SPEED MODE"
+  };
+ class SQCTL_ORDERS_FORM_LISTBOX_61_61_65 : RscListBox
+ {
+  x = 0.41
+  y = 0.2
+  idc = 209
+  w = 0.101
+  h = 0.103
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_ORDERS_FORM_LISTBOX_61_61_66 : RscListBox
+ {
+  x = 0.3
+  y = 0.2
+  idc = 211
+  w = 0.101
+  h = 0.103
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_ORDERS_BUTTON_68 : RscButton
+ {
+  x = 0.74
+  y = 0.16998
+  idc = 213
+  w = 0.072
+  h = 0.025
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.016
+ text = "Advanced>"
+ action = ""
+ default = false
+  };
+ class SQCTL_FILTER_COMBO : RscCombo
+ {
+  x = 0.89
+  y = 0.07005
+  idc = 905
+  w = 0.081
+  h = 0.02
+  style = ST_LEFT
+  colorText[] = {1, 1, 1, 1};
+  colorBackground[] = {0.501, 0.501, 0.501, 1};
+ font = "TahomaB36"
+  SizeEX = 0.016
+  colorSelect[] = {0.2, 0.2, 0.2, 1};
+  colorSelectBackGround[] = {1, 1, 1, 1};
+  RowHeight = 0.02
+ wholeHeight = 0.3
+  };
+ class SQCTL_ORDERS_BUTTON_70 : RscButton
+ {
+  x = 0.78
+  y = 0.4
+  idc = 214
+  w = 0.072
+  h = 0.024
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "Cancel"
+ action = ""
+ default = false
+  };
+ class SQCTL_MANAGE_TRANSFER_BG : RscText
+ {
+  x = 0.05
+  y = 0.36998
+  idc = 118
+  w = 0.177
+  h = 0.265
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 0, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_MNG_ROSTER_COMBO : RscListBox
+ {
+  x = 0.06
+  y = 0.4
+  idc = 110
+  w = 0.16
+  h = 0.154
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+  };
+ class SQCTL_MNG_ROSTER_TXT : RscText
+ {
+  x = 0.06
+  y = 0.36998
+  idc = 109
+  w = 0.117
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "ROSTER"
+  };
+ class SQCTL_MNG_RENAME_TXT : RscText
+ {
+  x = 0.06
+  y = 0.2
+  idc = 102
+  w = 0.157
+  h = 0.02
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "RENAME"
+  };
+ class SQCTL_MNG_ROSTER_BUTTON : RscButton
+ {
+  x = 0.1
+  y = 0.55997
+  idc = 111
+  w = 0.078
+  h = 0.025
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "TRANSFER"
+ action = ""
+ default = false
+  };
+ class SQCTL_MNG_TRANSFER_BG : RscText
+ {
+  x = 0.23
+  y = 0.4
+  idc = 113
+  w = 0.1825
+  h = 0.11605
+  style = ST_FRAME
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 0, 0, 0};
+  SizeEX = 0.025
+ text = ""
+  };
+ class SQCTL_MNG_TRANSFER_TXT : RscText
+ {
+  x = 0.24
+  y = 0.4
+  idc = 114
+  w = 0.117
+  h = 0.037
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 0};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "TRANSFER"
+  };
+ class SQCTL_MNG_TRANSFER_COMBO : RscCombo
+ {
+  x = 0.24
+  y = 0.43002
+  idc = 115
+  w = 0.16375
+  h = 0.03704
+  style = ST_LEFT
+  colorText[] = {0, 0, 0, 1};
+  colorBackground[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+  colorSelect[] = {1, 1, 1, 1};
+  colorSelectBackGround[] = {0.2, 0.2, 0.2, 1};
+  RowHeight = 0.02
+ wholeHeight = 0.3
+  };
+ class SQCTL_MNG_TRASNFER_CANCEL_BUTTON : RscButton
+ {
+  x = 0.24
+  y = 0.48005
+  idc = 116
+  w = 0.078
+  h = 0.025
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "Cancel"
+ action = ""
+ default = false
+  };
+ class SQCTL_MNG_TRANSFER_OK_BUTTON : RscButton
+ {
+  x = 0.33
+  y = 0.48005
+  idc = 117
+  w = 0.078
+  h = 0.025
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "OK"
+ action = ""
+ default = false
+  };
+ class SQCTL_MANAGE_BUTTON : RscButton
+ {
+  x = 0.1
+  y = 0.6
+  idc = 112
+  w = 0.078
+  h = 0.025
+  style = ST_CENTER
+  colorText[] = {0, 0, 0, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "Close"
+ action = ""
+ default = false
+  };
+ class SQCTL_PLAYERGROUP_BUTTON : RscButton
+ {
+  x = 0.02
+  y = 0.03002
+  idc = 14
+  w = 0.028
+  h = 0.053
+  style = ST_CENTER
+  colorText[] = {1, 1, 1, 1};
+ font = "TahomaB36"
+  SizeEX = 0.018
+ text = "PL"
+ action = ""
+ default = false
+  };
+};

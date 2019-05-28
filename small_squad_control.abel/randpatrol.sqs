@@ -1,0 +1,30 @@
+; RandomPatrol
+; Group/Unit chooses random pos, patrols there, chooses again etc etc
+; example: call with [this,400,10] exec "randpatrol.sqs"
+; this = leader in the patrol group
+; 400 = patrol range around the start position
+; 10 = wait time once patrol position is reached
+
+_grp = group (_this select 0)
+_range = _this select 1
+_delay = _this select 2
+
+_origPos = getpos (leader _grp)
+
+#patrol_again
+({_x setBehaviour "AWARE"} forEach units _grp)
+_ranX = 1
+_ranY = 1
+?(random 1) < 0.5: _ranX = -1
+?(random 1) < 0.5: _ranY = -1
+xx = random _range * _ranX
+yy = random _range * _ranY
+units _grp commandMove [(_origPos select 0) + xx, (_origPos select 1) + yy]
+
+@("unitready _x" count units _grp)==(count units _grp)
+({_x setBehaviour "COMBAT"} forEach units _grp)
+~_delay
+
+goto "patrol_again"
+
+EXIT

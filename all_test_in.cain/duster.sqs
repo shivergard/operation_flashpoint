@@ -1,0 +1,98 @@
+; ***************************************************
+; Sand Storm Script 1.0 
+; by Toadeater (toadeater@wolfenet.com)
+; ***************************************************
+; 
+; Usage: Activate from the player's init line, or a script:
+; [playername] exec "duster.sqs"
+;
+; If you want to use this script in a cutscene, attach it to a camera, otherwise
+; the "sand" won't be seen from the camera's point of view.
+; E.g. [camera1] exec "duster.sqs"
+;
+; Turn off by setting the "dustoff" variable to true via a trigger or script, etc.
+; dustoff = true
+
+dustoff = false
+_target = _this select 0
+? _target == player : _target = player
+_delay = .1
+
+; Change to a higher # if you want more randomization
+
+_wind = 2
+
+; Particle color values, change to match island/weather, e.g. snow.
+; _r = red, _g = green, _b = blue
+
+_r = .38
+_g = .36
+_b = .25
+
+; The other settings pretty much depend on each other, change them at your own risk.
+
+_delay = .1
+_strength = .2
+_distance = 100
+_size2 = 80
+_dirx = 0
+_diry = 0
+_dirz = 3
+_height = 0
+_spin = -33
+
+#loop
+
+? (speed _target) > 1 : _delay = .05
+? (speed _target) < 2 : _delay = .1
+? (speed _target) > 1 : _distance = 25
+? (speed _target) < 2 : _distance = 15
+? (getpos _target select 2) > 20 : goto "wait"
+? _spin > 33 : _spin = -33
+_spin = _spin + (random 13)
+_size1 = 20 + (random 60)
+
+_dir180 = (getdir _target) + 181 + _spin
+_pos4 = [((getPos _target) select 0) + _distance * (sin _dir180), (getPos _target select 1) + _distance * (cos _dir180), _height]
+drop ["cl_water","","Billboard",3,2,_pos4,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir90 = (getdir _target) + 91 + _spin
+_pos2 = [((getPos _target) select 0) + _distance * (sin _dir90), (getPos _target select 1) + _distance * (cos _dir90),_height]
+drop ["cl_water","","Billboard",3,2,_pos2,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[0.2,0.2,.1,_strength],[_r,_g,_b,_strength],[0.21,0.2,0.1,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir270 = (getdir _target) + 271 + _spin
+_pos6 = [((getPos _target) select 0) + _distance * (sin _dir270), (getPos _target select 1) + _distance * (cos _dir270),_height]
+drop ["cl_water","","Billboard",3,2,_pos6,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir45 = (getdir _target) + 45 + _spin
+_pos1 = [(getPos _target select 0) + _distance * (sin _dir45), (getPos _target select 1) + _distance * (cos _dir45), _height]
+drop ["cl_water","","Billboard",3,2,_pos1,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir315 = (getdir _target) + 315 + _spin
+_pos7 = [((getPos _target) select 0) + _distance * (sin _dir315), (getPos _target select 1) + _distance * (cos _dir315),_height]
+drop ["cl_water","","Billboard",3,2,_pos7,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir135 = (getdir _target) + 135 + _spin
+_pos3 = [((getPos _target) select 0) + _distance * (sin _dir135), (getPos _target select 1) + _distance * (cos _dir135),_height]
+drop ["cl_water","","Billboard",3,2,_pos3,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_dir225 = (getdir _target) + 225 + _spin
+_pos5 = [((getPos _target) select 0) + _distance * (sin _dir225), (getPos _target select 1) + _distance * (cos _dir225),_height]
+drop ["cl_water","","Billboard",3,2,_pos5,[_dirx,_diry,_dirz],0,25,19,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+_pos = [(getPos _target select 0) + _distance * sin (getdir _target), (getPos _target select 1) + _distance * cos (getdir _target),_height]
+drop ["cl_water","","Billboard",3,2,_pos,[0,0,3],0,40,35,0,[_size1,_size2],[[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength],[_r,_g,_b,_strength]],[0],.5,_wind,"","",""]
+~_delay
+
+? dustoff : goto "exit"
+
+Goto "loop"
+
+#wait
+
+?  (getpos _target select 2) < 20 : goto "loop"
+? dustoff : goto "exit"
+~1
+goto "wait"
+
+#Exit

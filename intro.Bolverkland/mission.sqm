@@ -1,0 +1,152 @@
+version=11.000000;
+class Mission
+{
+	addOns[]={};
+	randomSeed=7210499.000000;
+	class Intel
+	{
+	};
+};
+class Intro
+{
+	addOns[]={};
+	randomSeed=12712451.000000;
+	class Intel
+	{
+		startWeather=0.000000;
+		forecastWeather=0.000000;
+		hour=5.000000;
+	};
+	class Groups
+	{
+		items=2.000000;
+		class Item0
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=1.000000;
+				class Item0
+				{
+					position[]={1746.109863,57.476334,4969.645020};
+					azimut=80.000000;
+					special="NONE";
+					id=1.000000;
+					side="EAST";
+					vehicle="SoldierESaboteurPipe";
+					player="PLAYER COMMANDER";
+					leader=1.000000;
+					rank="SERGEANT";
+					skill=0.916204;
+					markers[]={};
+				};
+			};
+		};
+		class Item1
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=1.000000;
+				class Item0
+				{
+					position[]={7894.834961,378.785583,2624.464600};
+					special="FLY";
+					id=0.000000;
+					side="EAST";
+					vehicle="Mi24";
+					leader=1.000000;
+					skill=0.803045;
+					text="heli1";
+					markers[]={};
+					init="this exec ""intro.sqs""";
+				};
+			};
+			class Waypoints
+			{
+				items=7.000000;
+				class Item0
+				{
+					position[]={7624.721680,39.525497,6524.223633};
+					speed="FULL";
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item1
+				{
+					position[]={1714.616821,52.651711,4928.033691};
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item2
+				{
+					position[]={1612.800537,149.511688,11647.519531};
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item3
+				{
+					position[]={9356.798828,435.002197,11871.612305};
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item4
+				{
+					position[]={8940.798828,460.604980,813.140198};
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item5
+				{
+					position[]={3532.799316,39.216652,1837.564941};
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+				class Item6
+				{
+					position[]={7724.797852,43.531586,6511.508301};
+					type="CYCLE";
+					synchronizations[]={};
+					class Effects
+					{
+					};
+					showWP="NEVER";
+				};
+			};
+		};
+	};
+};
+class OutroWin
+{
+	addOns[]={};
+	randomSeed=7999491.000000;
+	class Intel
+	{
+	};
+};
+class OutroLoose
+{
+	addOns[]={};
+	randomSeed=1415683.000000;
+	class Intel
+	{
+	};
+};

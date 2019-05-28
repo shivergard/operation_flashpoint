@@ -1,0 +1,436 @@
+version=11;
+class Mission
+{
+	addOns[]=
+	{
+		"invasion_demo",
+		"SSTMIJJ",
+		"sstwp",
+		"sst_nervegas",
+		"Napoleon",
+		"CWOfCav",
+		"TestBabe",
+		"CWSharps",
+		"DRG_M870",
+		"21vbluger",
+		"cwunion",
+		"CWOfCav2",
+		"CWConf",
+		"farmgenerator",
+		"enfieldsoldier",
+		"sst_tow",
+		"musketsoldier",
+		"50caliber"
+	};
+	addOnsAuto[]=
+	{
+		"invasion_demo",
+		"SSTMIJJ",
+		"sstwp",
+		"Napoleon",
+		"CWOfCav",
+		"TestBabe",
+		"CWSharps",
+		"DRG_M870",
+		"CWOfCav2",
+		"CWUNION",
+		"CWConf",
+		"farmgenerator",
+		"sst_tow",
+		"50caliber"
+	};
+	randomSeed=14291459;
+	class Intel
+	{
+	};
+	class Groups
+	{
+		items=7;
+		class Item0
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=12;
+				class Item0
+				{
+					position[]={3079.040527,225.812408,6404.038574};
+					id=1;
+					side="EAST";
+					vehicle="fall_o1";
+					rank="CAPTAIN";
+					skill=0.733333;
+				};
+				class Item1
+				{
+					position[]={3082.040527,225.179993,6399.038574};
+					id=2;
+					side="EAST";
+					vehicle="fall_S2";
+					skill=0.200000;
+				};
+				class Item2
+				{
+					position[]={3086.040527,225.179993,6399.038574};
+					id=3;
+					side="EAST";
+					vehicle="fall_S2";
+					skill=0.200000;
+				};
+				class Item3
+				{
+					position[]={3088.040527,225.179993,6399.038574};
+					id=4;
+					side="EAST";
+					vehicle="fall_S3";
+					skill=0.200000;
+				};
+				class Item4
+				{
+					position[]={3090.040527,225.179993,6399.038574};
+					id=5;
+					side="EAST";
+					vehicle="fall_h5";
+					rank="SERGEANT";
+					skill=0.200000;
+				};
+				class Item5
+				{
+					position[]={3053.240479,225.179993,6386.238770};
+					id=0;
+					side="EAST";
+					vehicle="fall_P1";
+					skill=0.200000;
+				};
+				class Item6
+				{
+					position[]={3056.640137,228.036163,6418.238770};
+					id=6;
+					side="WEST";
+					vehicle="SSTMIJJ";
+					player="PLAYER COMMANDER";
+					skill=0.600000;
+					text="zerg";
+				};
+				class Item7
+				{
+					position[]={3027.841064,231.595703,6427.838379};
+					id=7;
+					side="WEST";
+					vehicle="sst_mi_nukeug";
+					rank="LIEUTNANT";
+					skill=0.200000;
+				};
+				class Item8
+				{
+					position[]={3054.080566,225.179993,6350.077637};
+					id=8;
+					side="EAST";
+					vehicle="Kub4";
+					skill=0.600000;
+				};
+				class Item9
+				{
+					position[]={3025.281250,227.685471,6369.274902};
+					id=28;
+					side="EAST";
+					vehicle="WH_HMGunner";
+					leader=1;
+					rank="MAJOR";
+					skill=0.466667;
+				};
+				class Item10
+				{
+					position[]={2996.480225,229.851852,6388.478027};
+					id=29;
+					side="WEST";
+					vehicle="Soldierterra";
+					skill=0.600000;
+				};
+				class Item11
+				{
+					position[]={3050.879883,233.275131,6452.479004};
+					id=30;
+					side="WEST";
+					vehicle="SSTMIJJ";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item1
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={2372.480957,30.110834,6585.478516};
+					azimut=320.000000;
+					id=9;
+					side="WEST";
+					vehicle="NapoleonU";
+					leader=1;
+					skill=0.600000;
+				};
+			};
+		};
+		class Item2
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={2414.080811,29.281925,6598.277832};
+					id=10;
+					side="EAST";
+					vehicle="CONFO";
+					player="PLAY CDG";
+					leader=1;
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item3
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=8;
+				class Item0
+				{
+					position[]={3623.681152,170.699310,8236.677734};
+					id=11;
+					side="EAST";
+					vehicle="sst_warrior3";
+					player="PLAY CDG";
+					leader=1;
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item1
+				{
+					position[]={3662.081055,172.480896,8236.677734};
+					id=12;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item2
+				{
+					position[]={3588.481201,168.618774,8223.877930};
+					id=13;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item3
+				{
+					position[]={3649.281250,178.216080,8207.877930};
+					id=14;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item4
+				{
+					position[]={3614.081055,174.927094,8204.677734};
+					id=15;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item5
+				{
+					position[]={3681.281250,178.459732,8207.877930};
+					id=16;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item6
+				{
+					position[]={3633.281250,181.788681,8185.478027};
+					id=17;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item7
+				{
+					position[]={3582.081299,170.886108,8195.078125};
+					id=18;
+					side="EAST";
+					vehicle="sst_warrior3";
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item4
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=5;
+				class Item0
+				{
+					position[]={5018.881348,456.610107,8115.077637};
+					id=19;
+					side="WEST";
+					vehicle="CarbineSoldier";
+					leader=1;
+					rank="CAPTAIN";
+					skill=0.600000;
+				};
+				class Item1
+				{
+					position[]={5044.481445,455.743225,8105.477539};
+					id=20;
+					side="WEST";
+					vehicle="SoldierWBM870";
+					rank="CAPTAIN";
+					skill=0.600000;
+					text="idiots1";
+				};
+				class Item2
+				{
+					position[]={5064.321289,438.136475,8130.117676};
+					id=21;
+					side="WEST";
+					vehicle="UNIONOC";
+					skill=0.600000;
+					text="idiots2";
+					init="[] exec ""retroday.sqs""";
+				};
+				class Item3
+				{
+					position[]={5080.321777,437.076233,8104.518066};
+					id=22;
+					side="WEST";
+					vehicle="UNION2";
+					skill=0.600000;
+				};
+				class Item4
+				{
+					position[]={5070.721191,441.354279,8078.917969};
+					id=23;
+					side="WEST";
+					vehicle="UNION3";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item5
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=2;
+				class Item0
+				{
+					position[]={6792.322266,10.514559,11550.916992};
+					id=24;
+					side="EAST";
+					vehicle="CONF1";
+					leader=1;
+					skill=0.600000;
+				};
+				class Item1
+				{
+					position[]={6811.521973,11.526731,11522.117188};
+					id=25;
+					side="EAST";
+					vehicle="CONF2";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item6
+		{
+			side="CIV";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={3409.280762,319.580750,6961.277832};
+					id=26;
+					side="CIV";
+					vehicle="FarmerWoman";
+					leader=1;
+					rank="CAPTAIN";
+					skill=0.600000;
+					text="spectator";
+				};
+			};
+		};
+	};
+	class Vehicles
+	{
+		items=4;
+		class Item0
+		{
+			position[]={3118.081299,225.179993,6394.874512};
+			id=27;
+			side="EMPTY";
+			vehicle="sst_tow";
+			skill=0.600000;
+		};
+		class Item1
+		{
+			position[]={2999.680176,229.698654,6382.078613};
+			id=31;
+			side="EMPTY";
+			vehicle="SandbagWall";
+			skill=0.600000;
+		};
+		class Item2
+		{
+			position[]={3028.479980,226.477554,6343.679199};
+			id=32;
+			side="EMPTY";
+			vehicle="Truck5tReammo";
+			skill=0.600000;
+			init="this addWeaponCargo [""M16"",10];this addWeaponCargo [""XMS"",10]; this addWeaponCargo [""M4"",50];";
+		};
+		class Item3
+		{
+			position[]={3082.880127,225.179993,6369.278809};
+			id=33;
+			side="EMPTY";
+			vehicle="sst_50Caliber";
+			skill=0.600000;
+		};
+	};
+};
+class Intro
+{
+	randomSeed=14364163;
+	class Intel
+	{
+	};
+};
+class OutroWin
+{
+	randomSeed=12105219;
+	class Intel
+	{
+	};
+};
+class OutroLoose
+{
+	randomSeed=3809283;
+	class Intel
+	{
+	};
+};

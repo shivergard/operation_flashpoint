@@ -1,0 +1,188 @@
+version=11;
+class Mission
+{
+	addOns[]=
+	{
+		"CWUNION",
+		"CWOfCav2",
+		"Parrot",
+		"cwspencer",
+		"musketsoldier",
+		"cwflags",
+		"cwsharps",
+		"farmgenerator",
+		"sstwp",
+		"sst_nervegas",
+		"TestBabe",
+		"cwofcav",
+		"21vbluger",
+		"cwconf",
+		"enfieldsoldier"
+	};
+	addOnsAuto[]=
+	{
+		"CWUNION",
+		"CWOfCav2",
+		"Parrot",
+		"farmgenerator",
+		"sstwp",
+		"TestBabe"
+	};
+	randomSeed=14030851;
+	class Intel
+	{
+	};
+	class Groups
+	{
+		items=3;
+		class Item0
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=7;
+				class Item0
+				{
+					position[]={7594.832520,9.855000,9732.623047};
+					id=0;
+					side="WEST";
+					vehicle="UNIONS";
+					leader=1;
+					skill=0.600000;
+				};
+				class Item1
+				{
+					position[]={7617.232422,9.855000,9710.223633};
+					id=1;
+					side="WEST";
+					vehicle="UNION2";
+					skill=0.600000;
+				};
+				class Item2
+				{
+					position[]={7639.632324,9.855000,9729.423828};
+					id=2;
+					side="WEST";
+					vehicle="UNIONF";
+					skill=0.600000;
+				};
+				class Item3
+				{
+					position[]={7633.232910,10.085878,9758.223633};
+					azimut=250.000000;
+					id=3;
+					side="WEST";
+					vehicle="UNIONC";
+					player="PLAYER COMMANDER";
+					skill=0.600000;
+					text="zerg";
+				};
+				class Item4
+				{
+					position[]={7591.631836,11.666902,9774.223633};
+					azimut=250.000000;
+					id=4;
+					side="WEST";
+					vehicle="UNIONG";
+					skill=0.600000;
+				};
+				class Item5
+				{
+					position[]={7559.632324,10.618375,9761.423828};
+					azimut=250.000000;
+					id=5;
+					side="WEST";
+					vehicle="UNIONIBNCO";
+					skill=0.600000;
+				};
+				class Item6
+				{
+					position[]={7569.232422,12.709958,9793.423828};
+					azimut=250.000000;
+					id=6;
+					side="WEST";
+					vehicle="ParrotU";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item1
+		{
+			side="CIV";
+			class Vehicles
+			{
+				items=2;
+				class Item0
+				{
+					position[]={7594.832520,10.391707,9841.422852};
+					azimut=250.000000;
+					id=7;
+					side="CIV";
+					vehicle="FarmerWoman";
+					leader=1;
+					skill=0.600000;
+				};
+				class Item1
+				{
+					position[]={7623.631836,9.227668,9847.823242};
+					azimut=250.000000;
+					id=8;
+					side="WEST";
+					vehicle="sst_mi_nukeug";
+					skill=0.600000;
+				};
+			};
+		};
+		class Item2
+		{
+			side="EAST";
+			class Vehicles
+			{
+				items=2;
+				class Item0
+				{
+					position[]={6036.432617,18.346312,10039.822266};
+					azimut=250.000000;
+					id=9;
+					side="EAST";
+					vehicle="sst_warrior3";
+					leader=1;
+					skill=0.600000;
+					text="idiots1";
+				};
+				class Item1
+				{
+					position[]={6036.432617,18.322683,10011.022461};
+					azimut=250.000000;
+					id=10;
+					side="EAST";
+					vehicle="sst_warrior3";
+					skill=0.600000;
+					text="idiots2";
+					init="[] exec ""retroday.sqs""";
+				};
+			};
+		};
+	};
+};
+class Intro
+{
+	randomSeed=8478723;
+	class Intel
+	{
+	};
+};
+class OutroWin
+{
+	randomSeed=16623107;
+	class Intel
+	{
+	};
+};
+class OutroLoose
+{
+	randomSeed=6308355;
+	class Intel
+	{
+	};
+};

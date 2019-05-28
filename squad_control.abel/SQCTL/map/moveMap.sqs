@@ -1,0 +1,56 @@
+; MOVE MAP
+
+_dir = _this select 0
+_mrkr = "SQCTL_mapControl"
+_pos = getMarkerPos _mrkr
+_x = _pos select 0
+_y = _pos select 1
+_zoom = SQCTL select 2
+_dist = (500 * _zoom) - 20
+_zoomMod = 0.05
+_maxZoom = 0.5
+_minZoom = 0.05
+
+goto _dir
+exit
+
+#up
+_x = _x
+_y = _y + _dist
+goto "move"
+
+#down
+_x = _x
+_y = _y - _dist
+goto "move"
+
+#left
+_x = _x - _dist
+_y = _y
+goto "move"
+
+#right
+_x = _x + _dist
+_y = _y
+goto "move"
+
+#zoomin
+_zoom = _zoom - _zoomMod
+?(_zoom <= _minZoom): _zoom = _minZoom
+SQCTL set [2,_zoom]
+goto "move"
+
+#zoomout
+_zoom = _zoom + _zoomMod
+?(_zoom >= _maxZoom): _zoom = _maxZoom
+SQCTL set [2,_zoom]
+goto "move"
+
+
+#move
+;player sidechat format ["_zoom: %1",_zoom]
+_pos = [_x,_y]
+mapAnimAdd [0, _zoom, _pos]
+mapAnimCommit
+_mrkr setMarkerPos _pos
+exit

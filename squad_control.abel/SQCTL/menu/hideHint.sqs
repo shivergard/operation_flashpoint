@@ -1,0 +1,8 @@
+; HIDE HINT
+
+_idc = _this select 0
+
+~30
+ctrlSetText [_idc, ""] 
+
+exit

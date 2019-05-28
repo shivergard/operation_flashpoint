@@ -1,0 +1,44 @@
+; NAVIGATION BUTTON
+
+_mode = _this select 0
+
+; Hide manager menu
+[] exec "SQCTL\manage\hideManager.sqs"
+
+goto _mode
+exit
+
+; SQUADS
+#nextSQ
+_i = (SQCTL select 5) select 0
+; min sq index + current index mod + max row length
+?((51 + _i + 7) < count SQCTL): _i = _i + 1
+goto "setSQ"
+
+#previousSQ
+_i = (SQCTL select 5) select 0
+?(_i > 0): _i = _i - 1
+goto "setSQ"
+
+#setSQ
+;player sidechat format ["_i: %1",_i]
+(SQCTL select 5) set [0,_i]
+exit
+
+
+; GROUPS
+#nextGR
+_i = (SQCTL select 5) select 1
+; current index mod + max row length
+?((_i + 7) < count (SQCTL select 6)): _i = _i + 1
+goto "setGR"
+
+#previousGR
+_i = (SQCTL select 5) select 1
+?(_i > 0): _i = _i - 1
+goto "setGR"
+
+#setGR
+;player sidechat format ["_i: %1",_i]
+(SQCTL select 5) set [1,_i]
+exit

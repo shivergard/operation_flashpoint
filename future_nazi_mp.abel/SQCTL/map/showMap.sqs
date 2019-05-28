@@ -1,0 +1,86 @@
+; MAP
+
+_wait = 0.2
+
+; Set show/hide map button text
+_idc = 2
+ctrlSetText [_idc, localize "STR_SQCTL_HIDEMAP"]
+_action = {[] exec "SQCTL\map\hideMap.sqs"}
+buttonSetAction [_idc, _action]
+
+; Update show map
+SQCTL set [1,true]
+
+; Show map controls
+ctrlShow [3, true]
+ctrlShow [4, true]
+ctrlShow [5, true]
+ctrlShow [6, true]
+ctrlShow [7, true]
+ctrlShow [8, true]
+
+; Map control buttons
+_action = {["up"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [3, _action]
+
+_action = {["down"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [4, _action]
+
+_action = {["left"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [5, _action]
+
+_action = {["right"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [6, _action]
+
+_action = {["zoomin"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [7, _action]
+
+_action = {["zoomout"] exec "SQCTL\map\moveMap.sqs"}
+buttonSetAction [8, _action]
+
+; Center map
+_mrkr = "SQCTL_mapControl"
+_mrkr setMarkerType "dot"
+_mrkr setMarkerSize [0.5,0.5]
+_zoom = SQCTL select 2
+mapAnimAdd [0, _zoom, markerPos _mrkr]
+mapAnimCommit
+
+; Set shown values
+_compass = shownCompass
+_GPS = shownGPS
+_pad = shownPad
+_radio = shownRadio
+_watch = shownWatch
+
+; Hide clutter
+showCompass false
+showGPS false
+showPad false
+showRadio false
+showWatch false
+
+; Show the map
+forceMap true
+
+; Wait for the dialogs to close
+#wait
+~_wait
+?((ctrlVisible 0) and (SQCTL select 1)): goto "wait"
+
+; Close the map
+forceMap false
+
+; Show clutter
+showCompass _compass
+showGPS _GPS
+showRadio _radio
+showPad _pad
+showWatch _watch
+
+_mrkr setMarkerType "empty"
+
+; Reset last squad index
+?!(ctrlVisible 0): SQCTL set [3,-1], "SQCTL_obj" setMarkerType "empty"
+
+exit

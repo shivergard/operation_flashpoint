@@ -1,0 +1,70 @@
+;----------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------
+;; Attach by Red Stripe Studios
+;; Put in activation field [unit1, unit2, unit3] exec "attach.sqs"
+;; enjoy the script!
+;----------------------------------------------------------------------------------
+;----------------------------------------------------------------------------------
+
+
+
+
+
+
+
+;----------------------------------------------------------------------------------
+;selects units
+;----------------------------------------------------------------------------------
+
+_unit1 = _this select 0
+_unit2 = _this select 1
+_unit3 = _this select 2
+
+;----------------------------------------------------------------------------------
+;; here set the distance from the centre of 'unit1' you want to attach 'unit2' 
+;; in co-ordinates [x(left/right),y(front/back),z(up/down)]
+;----------------------------------------------------------------------------------
+
+_xa = 1.5
+_ya = 12
+_za = 0.6
+
+;----------------------------------------------------------------------------------
+;; here set the distance from the centre of 'unit1' you want to attach 'unit3' 
+;; in co-ordinates [x(left/right),y(front/back),z(up/down)]
+;----------------------------------------------------------------------------------
+
+_zb = 4.6
+
+#loop
+
+_xb = 4.5 * (random 15)
+_yb = 40 * (random 15)
+
+
+
+
+;----------------------------------------------------------------------------------
+;; the fancy maths bit, calculates the radius of the 'oval' to be mapped out by the attached object 
+;; and tells unit2 to stick to a certain area in relation to unit1
+;----------------------------------------------------------------------------------
+
+_unit2 setpos [(getpos _unit1 select 0) +((((_xa^2)+(_ya^2))^0.5) * sin (getdir _unit1)), (getpos _unit1 select 1) +((((_xa^2)+(_ya^2))^0.5) * cos  (getdir _unit1)), (getpos _unit1 select 2) +_z]
+_unit2 setdammage 0
+
+_unit3 setpos [(getpos _unit1 select 0) +((((_xb^2)+(_yb^2))^0.5) * sin (getdir _unit1)), (getpos _unit1 select 1) +((((_xb^2)+(_yb^2))^0.5) * cos  (getdir _unit1)), (getpos _unit1 select 2) +_z]
+_unit3 setdammage 0
+
+
+"OfficerE" createUnit [[(getpos _unit1 select 0) +((((_xb^2)+(_yb^2))^0.5) * sin (getdir _unit1)), (getpos _unit1 select 1) +((((_xb^2)+(_yb^2))^0.5) * cos  (getdir _unit1)), (getpos _unit1 select 2) +_z], grpNull];
+
+
+;----------------------------------------------------------------------------------
+;; set refesh rate (unlimited HIGH LAG!!!!) make something very small, e.g. ~0000000000000000000.1 for lower lag
+;; however bigger values means the object jumps lots instead of sticking
+;----------------------------------------------------------------------------------
+
+~4
+
+goto "loop"
+

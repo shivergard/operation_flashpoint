@@ -1,0 +1,197 @@
+; -----------------
+; kINFOSHARE - SQUAD CONTROL VERSION
+; by kenoxite
+; 
+; Allows group leaders to automatically share information about enemy units with each other.
+; The distance at which they can transmit this information will depend on their side
+; and wether or not they have an RTO or a vehicle with a radio in their group.
+;
+; USE: 
+; 1) Place a trigger as big as the area of your mission, set it to be activated by Anybody and name it allUnits
+; 2) Init the script wherever you like (like in init.sqs): [] exec "kInfoshare.sqs"
+;
+; USE FOR WGL:
+; 1) Init the script wherever you like (like in init.sqs): [] exec "kInfoshare.sqs"
+;
+; For MP you'll need to place a game logic and name it: server
+; If you use CoC NS2 or CoC UA that's not needed.
+;
+; Advanced instructions at the end of this script.
+; -----------------
+
+@ SQCTL select 0
+
+; Don't remove this wait
+~0.01
+
+; Execute this only on the server
+;?(!local server or !local CoC_Server): exit
+
+_null = format["%1",_nullstring]
+
+; Deactivate if ECP infoshare or SLX/GL is running
+? (format["%1",ECP_public] != _null): if (ECP_public select 37) then { exit }
+? (format["%1",SLX_GL3_Path] != _null): exit
+
+_arrUnits = if (count _this > 0) then { _this select 0 } else { "allUnits" }
+_maxDist = if (count _this > 1) then { _this select 1 } else { [4000,50,50,50,0] }
+_radioCl = if (count _this > 2) then { _this select 2 } else { if (wgl_on) then { ["WGL_ANPRC77_Alice","WGL_ANPRC77_Raid","WGL_P159_RD90","WGL_P159_RD54","WGL_P159_RD99"] } else { [] } }
+
+_arrUnits = if (_arrUnits == "allUnits") then { list call _arrUnits } else { call _arrUnits }
+
+; Define function
+? (format["%1",in2Darray]==_null) : in2Darray = preprocessfile "in2Darray.sqf"
+
+_kA = 0.105
+_wait = 5
+_simulateSoviet = true
+_debug = false
+
+_playerSide = side player
+
+; Side group arrays will contain a list of groups belonging to its side, plus the list of enemy units known by that group and if the group has a radio
+_westGrps = []
+_eastGrps = []
+_guerGrps = []
+_civGrps = []
+
+#loop
+?(_debug): player globalchat "#NEXT CHECK"
+
+; Clean side arrays
+_sideArr = ["west","east","guer","civ"]
+{ call format ["_c = 0; { if (({alive _x} count units (_x select 0)) < 1) then { _%1Grps set [_c,-1]; _%1Grps = _%1Grps - [-1] }; _c = _c + 1 } forEach _%1Grps", _x] } forEach _sideArr
+
+; Build side arrays
+{ if (!isNull _x and alive _x) then { call format ["_ind = [group _x, _%1Grps] call in2Darray; if (_ind < 0) then { _%1Grps set [count _%1Grps, [group _x,false]] };",side _x] }} forEach _arrUnits 
+~0.1
+
+; Clean detected enemy groups array
+SQCTL set [9,[]]
+_eArr = (SQCTL select 9)
+
+_c = 0
+#checkAll
+	_sideGrps = call format ["_%1Grps",_sideArr select _c]
+	?(count _sideGrps == 0): goto "wait"
+	
+; 	Set max distance based on side
+	_sMaxDist = _maxDist select _c
+
+; 	Build enemy groups list
+	_enmGrps = []
+	{ if (_x != (_sideArr select _c)) then { _enmGrps = _enmGrps + (call format ["_%1Grps",_x]) } } forEach _sideArr
+	?(count _enmGrps == 0): goto "wait"
+
+; 	Build enemy units list
+	_enmUnits = []
+	{ _enmUnits = _enmUnits + (units (_x select 0)) } forEach _enmGrps
+	
+		_c1 = 0
+		#check
+			_grpArr = (_sideGrps select _c1)
+			_uGrp = units (_grpArr select 0)
+			?(({alive _x} count _uGrp) < 1): goto "wait1"
+			_ldr = leader (_uGrp select 0)
+			_side = side _ldr
+			
+; 			Check if there's a vehicle with a radio in the group
+			_grpRad = if ((("Helicopter" countType _uGrp) > 0 and ("ParachuteBase" countType _uGrp) == 0) or ("Plane" countType _uGrp) > 0 or ("Tank" countType _uGrp) > 0) then { true } else { false }
+			
+;			Simulate soviet motorized infantry communications. Only Company comms while mounted
+			?(_grpRad and _simulateSoviet and _side == east and (vehicle _ldr) == _ldr): _grpRad = false
+			
+; 			Check if there's a radio in the group
+			_u = objNull
+			?(!_grpRad and count _radioCl > 0): { _u = _x; { if (_x in (weapons _u)) then { _grpRad = true } } forEach _radioCl } forEach _uGrp
+			
+;			Update radio value in groups array
+			_grpArr set [1, _grpRad]
+			
+; 			Add new enemy units detected by this group
+			_det = []
+			{ if ((_ldr knowsAbout (vehicle _x)) >= _kA and !((vehicle _x) in _det) and (_ldr countEnemy [vehicle _x]) > 0) then { _det set [count _det, vehicle _x] } } forEach _enmUnits
+			?(_debug and player in _uGrp): player globalchat format ["_det by player: %1", _det]; 
+			~0.01
+			
+;			Update array of enemy groups if same side as player
+			?(_side == _playerSide): { _eGrp = group _x; if !(_eGrp in (SQCTL select 9)) then { _eArr set [count _eArr,_eGrp] } } forEach _det
+			
+; 			Find close friendly groups
+			_closeGrps = []
+			{ if (((vehicle leader (_x select 0)) distance (vehicle _ldr)) <= _sMaxDist or (_grpRad and (_x select 1))) then { _closeGrps set [count _closeGrps, _x] } } forEach _sideGrps
+			~0.01
+			
+; 			Share detected array with close groups
+			{ _l = leader (_x select 0); { _l reveal (vehicle _x) } forEach _det } forEach _closeGrps
+			
+			#wait1
+			_c1 = _c1 + 1
+			~0.05
+		?(_c1 < count _sideGrps): goto "check"
+	
+	#wait
+	_c = _c + 1
+	~0.1
+?(_c < count _sideArr): goto "checkAll"
+
+; Undefine vars
+_sideArr = nil
+_sideGrps = nil
+_enmGrps = nil
+_enmUnits = nil
+_grpArr = nil
+_uGrp = nil
+_det = nil
+_ldr = nil
+_c = nil
+_c1 = nil
+_l = nil
+_u = nil
+_grpRad = nil
+_closeGrps = nil
+
+~_wait
+goto "loop"
+
+exit
+
+; -----------------
+; kINFOSHARE
+; 
+; ADVANCED:
+;
+; Parameters:
+; - Array listing all units. This can be either a trigger list or a hand made array of units. Note that only units in this array will be able to detect AND be detected
+; 	Default value: list allUnits
+; - Array of maximum communication distances. First element: distance for west side; Second elem: distance for east side; Third: resistance; Fourth: civilians; Five: renegades
+; 	Put an "x" if you want to use the default values ([4000,50,50,50,0])
+; - Array of radio classes recognized by this script. It will be an empty array as default
+; 
+; USE: [<array of units>,<array of max distances>,<array of recognized radios>] exec "kInfoshare.sqs"
+; EXAMPLE: ["list allUnits","x",["wgl_anprc77_alice","wgl_p159_rd90"]] exec "scripts\kInfoshare.sqs"
+;
+;
+; NOTES ON COMM DISTANCES:
+;
+; All men in US army squads in the 80s had a AN/PRC-68 radio (walkie-talkie) with a range of about 5km,
+; while soviets had to rely on an RTO or platoon leader carrying a P-159 VHF on their back. 
+; So, by default, all western units will have a far greater communication range than any other side.
+; This can be edited by the user.
+; 
+; Groups with a tank, plane or helicopter vehicle will be able to use that vehicle's radio to broadcast
+; virtually anywhere.
+; -----------------
+
+
+; RANGES
+;
+; US:
+; AN/PRC-77: 8km/16km - 50km
+; AN/PRC-68: 3km - 5km
+;
+; USSR:
+; P-159 VHF: 10km - 50km
+;
+; SINCGARS: 300m -35km
+; AN/PRC-148: 6km - 30km

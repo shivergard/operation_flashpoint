@@ -1,0 +1,36 @@
+; ROSTER
+
+_i = _this select 0
+
+_sqdArr = SQCTL select _i
+_sqd = _sqdArr select 0
+_units = units _sqd
+
+_players = [player]
+
+; Fill Orders list box
+_idc1 = 110
+lbClear _idc1
+_selected = false
+_c = 0
+;player sidechat format ["_orders: %1",_orders]
+#add
+_unit = _units select _c
+_role = if (_unit in _players) then { format [localize "STR_SQCTL_PLAYER1", name _unit] } else { [_unit] call unitRole }
+_skill = if (_unit in _players) then { "" } else { format ["(%1)", [_unit] call skillStr] }
+_text = format ["%1. %2 %3",_c+1,_role,_skill]
+_index = lbAdd [_idc1, _text]
+_data = format ["[%1,%2]",_i,_c]
+lbSetData [_idc1, _index, _data]
+?(!_selected): lbSetCurSel [_idc1, 0], _selected = true
+_c = _c + 1
+?(_c < (count _units)): goto "add"
+
+
+; Set "Transfer" button
+_idc2 = 111
+_action = format [{[lbData [%1, lbCurSel %1]] exec "SQCTL\manage\transfer.sqs";},_idc1]
+buttonSetAction [_idc2, _action]
+
+
+exit

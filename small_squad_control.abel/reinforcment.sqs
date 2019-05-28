@@ -1,0 +1,78 @@
+#reinforcement
+
+western = 0;
+
+#fillgroup
+
+_range = 300;
+
+
+randomIdiotsNum = (random 10) + 1;
+randomIdiotsNum = randomIdiotsNum - randomIdiotsNum % 1;
+
+westernPolice = 0;
+dummygroup = group idiots2;
+officerName = "SSTMIJJ";
+
+?(randomIdiotsNum > 5):dummygroup = group idiots1;
+?(randomIdiotsNum > 5):westernPolice = 1;
+?(randomIdiotsNum > 5):officerName = "Soldierterra";
+
+
+
+randomBleNum = (random 500) + 1;
+randomBleNum = randomBleNum - randomBleNum % 1;
+
+_origPos = getpos (zerg)
+
+#patrol_again
+({_x setBehaviour "AWARE"} forEach units _grp)
+_ranX = 1
+_ranY = 1
+?(random 1) < 0.5: _ranX = -1
+?(random 1) < 0.5: _ranY = -1
+xx = random _range * _ranX
+yy = random _range * _ranY
+
+unitPos = [(_origPos select 0) + xx, (_origPos select 1) + yy]; 
+
+spectator setpos (unitPos)
+
+#spawnleader
+officerName createUnit [unitPos, dummygroup]
+;assign to other group
+_member = (units dummygroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#spawnrest
+
+randomNum = "";
+
+?(westernPolice == 1):western = western + 1;
+weapons = "";
+
+fullUnitGender = "SoldierWB";
+?(westernPolice == 1):fullUnitGender = "SSTMIJJ";
+
+newunit = fullUnitGender createUnit [unitPos , _grp , weapons];
+
+hint ((format ["!%1" , (count units _grp)]));
+
+?(count units _grp == 9):goto "groupfull"
+goto "spawnrest"
+
+#groupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+[_grp,(format ["Ihtiljons%1" , randomBleNum]),[randomBleNum,"PLATOON"]] exec "SQCTL\addSq.sqs";
+
+;group info
+hint format ["Group:Ihtiljons%1 at %5 Units:%2 \nLeader:%3 \nGroups:%4 \nwestern:%6",_grp,(count units _grp),(leader _grp),(count allgroups) , (format ["ble%1" , randomBleNum]) , (format ["!%1" , western])]
+
+units _grp commandMove _origPos;
+~600
+
+goto "fillgroup"

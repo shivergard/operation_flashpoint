@@ -1,0 +1,92 @@
+; TRANSFER
+
+_arr = call (_this select 0)
+_i = _arr select 0
+_mode = if (count _this > 1) then { _this select 1 } else { "" }
+
+_players = [player]
+
+?(_mode != ""): goto _mode
+
+; Show menu
+ctrlShow [113, true]
+ctrlShow [114, true]
+ctrlShow [115, true]
+ctrlShow [116, true]
+ctrlShow [117, true]
+
+_sqdArr = SQCTL select _i
+_sqd = _sqdArr select 0
+_units = units _sqd
+; Close manager if no units left
+?(count _units < 1): [] exec "SQCTL\manage\hideManager.sqs"
+
+_uInd = if (count _arr > 1) then { _arr select 1 } else { -1 }
+_unit = _units select _uInd
+
+; Fill Squads list box
+_idc1 = 115
+lbClear _idc1
+_sqdsStartIndex = 50
+_sqdsArr = [SQCTL, _sqdsStartIndex, ((count SQCTL) - _sqdsStartIndex)] call f_listSlice
+_selected = false
+_c = 0
+#add
+?((_c + _sqdsStartIndex) == _i): goto "skip"
+_trSqdArr = _sqdsArr select _c
+_trSqd = _trSqdArr select 0
+_trSqName = _trSqdArr select 1
+_sqdUnits = count units _trSqd
+?(_sqdUnits >= 12): goto "skip"
+_text = format ["%1 (%2 men)",_trSqName,_sqdUnits]
+_index = lbAdd [_idc1, _text]
+_data = format ["[%1,%2,%3]",_i,_c+_sqdsStartIndex,_uInd]
+lbSetData [_idc1, _index, _data]
+?(!_selected): lbSetCurSel [_idc1, 0], _selected = true
+#skip
+_c = _c + 1
+?(_c < (count _sqdsArr)): goto "add"
+
+; Set "Cancel" button
+_idc2 = 116
+_action = {["[-1,-1]","close"] exec "SQCTL\manage\transfer.sqs";}
+buttonSetAction [_idc2, _action]
+
+; Set "OK" button
+_idc3 = 117
+_action = format [{[lbData [%1, lbCurSel %1],"transfer"] exec "SQCTL\manage\transfer.sqs";},_idc1]
+buttonSetAction [_idc3, _action]
+exit
+
+#transfer
+_newSqInd = _arr select 1
+_uInd = _arr select 2
+_oldSqdArr = SQCTL select _i
+_oldSqd = _oldSqdArr select 0
+_oldUnits = units _oldSqd
+_unit = _oldUnits select _uInd
+
+?(_unit in _players): player globalchat localize "STR_SQCTL_TRANSFERERROR1",goto "close"
+
+_newSqdArr = SQCTL select _newSqInd
+;player sidechat format ["_newSqInd: %1",_newSqInd]
+_newSqd = _newSqdArr select 0
+_newUnits = units _newSqd
+
+[_unit] join _newSqd
+
+; Update original units count
+_oldSqdArr set [2,(_oldSqdArr select 2) - 1]
+_newSqdArr set [2,(_newSqdArr select 2) + 1]
+
+; Reset roster
+[_i] exec "SQCTL\manage\roster.sqs"
+
+
+#close
+ctrlShow [113, false]
+ctrlShow [114, false]
+ctrlShow [115, false]
+ctrlShow [116, false]
+ctrlShow [117, false]
+exit

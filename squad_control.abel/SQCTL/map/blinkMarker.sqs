@@ -1,0 +1,20 @@
+; BLINK MARKER
+
+_mrkr = _this select 0
+_dur = if (count _this > 1) then { _this select 1 } else { 2 }
+
+_dur = _dur * 2
+
+_type = getMarkerType _mrkr
+_c = 0
+_blinked = false
+#blink
+?(!_blinked): _mrkr setMarkerType "empty"
+?(_blinked): _mrkr setMarkerType _type
+~0.5
+_blinked = if (_blinked) then { false } else { true }
+_c = _c + 1
+?(_c < _dur): goto "blink"
+
+_mrkr setMarkerType _type
+exit

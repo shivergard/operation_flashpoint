@@ -1,0 +1,107 @@
+; SQUAD CONTROL
+; by kenoxite
+
+; Don't remove this pause
+~0.01
+
+; ## ALL
+; Define null var content
+_null=format["%1",_nullstring];
+
+; Delete starter logic
+deleteVehicle SQCTLStarter
+
+; Init global array
+SQCTL = []
+
+; SQCTL not ready yet
+SQCTL set [ 0, false ]
+
+; Functions only used by server
+? (format["%1",f_classifyTarget]==_null) : call loadfile "ofp_scriptlib\loadlib.sqf"
+? (format["%1",in2Darray]==_null) : in2Darray = preprocessfile "SQCTL\fu\in2Darray.sqf"
+? (format["%1",trim2dArr]==_null) : trim2dArr = preprocessfile "SQCTL\fu\trim2dArr.sqf"
+? (format["%1",trim2dArrEle]==_null) : trim2dArrEle = preprocessfile "SQCTL\fu\trim2dArrEle.sqf"
+? (format["%1",sort]==_null) : sort = preprocessfile "SQCTL\fu\sortBubble.sqf"
+? (format["%1",classifySquad]==_null) : classifySquad = preprocessfile "SQCTL\fu\classifySquad.sqf"
+? (format["%1",squadVehicles]==_null) : squadVehicles = preprocessfile "SQCTL\fu\squadVehicles.sqf"
+? (format["%1",vehInSquad]==_null) : vehInSquad = preprocessfile "SQCTL\fu\vehInSquad.sqf"
+? (format["%1",processSqStatus]==_null) : processSqStatus = preprocessfile "SQCTL\fu\processSqStatus.sqf"
+? (format["%1",distancePos]==_null) : distancePos = preprocessfile "SQCTL\fu\distancePos.sqf"
+? (format["%1",skillStr]==_null) : skillStr = preprocessfile "SQCTL\fu\skillStr.sqf"
+? (format["%1",unitRole]==_null) : unitRole = preprocessfile "SQCTL\fu\unitRole.sqf"
+
+; SQCTL select 0 : Ready check
+; SQCTL select 1 : Show map?
+; SQCTL select 2 : Map zoom level
+; SQCTL select 3 : Last selected squad
+; SQCTL select 4 : Squads included in formations
+; SQCTL select 5 : Start of card display row
+; SQCTL select 6 : Groups
+; SQCTL select 7 : Status of GROUPS/SQUADS button
+; SQCTL select 8 : Filter index
+; SQCTL select 9 : Detected enemies
+; SQCTL select 10 : Tracker activation
+; SQCTL select 11 : Display of advanced orders menu
+; SQCTL select 12 : Allow fleeing of squads under control
+; SQCTL select 13 : Allow point squad in formations
+; SQCTL select 50 : Player's squad
+; SQCTL select 51+ : Squads controlled by the player
+
+; Show map
+SQCTL set [ 1, true ]
+
+; Map zoom level
+SQCTL set [ 2, 0.2 ]
+
+; Last selected squad
+SQCTL set [ 3, -1 ]
+
+; Squads included in formations
+SQCTL set [ 4, [] ]
+
+; Start of card display row
+SQCTL set [ 5, [0,0] ]
+
+; Groups managed by SQCTL
+SQCTL set [ 6, [[localize "STR_SQCTL_NOGROUP"]] ]
+
+; Filter index
+SQCTL set [ 8, -1 ]
+
+; Detected enemies
+SQCTL set [ 9, [] ]
+
+
+; Load settings
+_settings = call loadfile "SQCTL_settings.sqf"
+
+
+; Add player's squad
+[group player,localize "STR_SQCTL_PLAYERGROUP",[0]] exec "SQCTL\addSq.sqs"
+
+; Vektorboson's global vars
+scfGridType = "OFP"
+
+; Start kInfoshare
+[] exec "SQCTL\kInfoshare_SQCTL.sqs"
+
+; Init group tracker
+[] exec "SQCTL\tracker\trackSqds.sqs"
+
+; Wait for all the groups to register
+_rdy = false
+_c = 0
+#wait
+?(_c == count SQCTL): _rdy = true
+~1
+_c = count SQCTL
+?(!_rdy): goto "wait"
+
+; SQCTL ready
+SQCTL set [ 0, true ]
+
+; Add action menu entry to player
+player addAction [localize "STR_SQCTL_SQCTL","SQCTL\menu\showMenu.sqs"]
+
+exit

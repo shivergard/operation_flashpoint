@@ -1,0 +1,92 @@
+; TRACK SQUADS AND ENEMIES
+
+@ SQCTL select 0
+
+_wait = 1
+_sqdTypes = call loadfile "SQCTL\fu\squadTypes.sqf";
+_sqdTypesE = call loadfile "SQCTL\fu\squadTypesEnemy.sqf";
+_sqdsStartIndex = 51
+_markersC = 30
+_eMarkersC = 30
+
+#loop
+?!(SQCTL select 10): exit
+
+; 	Player's squad
+	_sqArr = (SQCTL select 50)
+	_sqd = _sqArr select 0
+	_origCount = _sqArr select 2
+	_units = units _sqd
+	_pos = getPos leader _sqd
+	_type = (_sqdTypes select 7) select 1
+	_aliveCount = {alive _x} count _units
+	_sizeP = ((_aliveCount/_origCount)/1)+0.2;
+	?(_sizeP > 1): _sizeP = 1
+	_size = [_sizeP,_sizeP]
+	_mrkr = "SQCTL_gMrkr"
+	_mrkr setMarkerPos _pos
+	_mrkr setMarkerType _type
+	_mrkr setMarkerColor "COLORBLUE"
+	_mrkr setMarkerSize _size
+
+; 	Friendly squads
+	_sqdsArr = [SQCTL, _sqdsStartIndex, ((count SQCTL) - _sqdsStartIndex)] call f_listSlice;
+	_c = 0
+	?(count _sqdsArr < 1): goto "enemySqds"
+	#next
+	_sqArr = (_sqdsArr select _c)
+	_sqd = _sqArr select 0
+	_origCount = _sqArr select 2
+	_orderPos = (_sqArr select 3) select 1
+	_units = units _sqd
+	_pos = getPos leader _sqd
+; 	Find the closest unit to the target
+	?((_orderPos select 0) > 0):[ _units , "([getPos _element, _orderPos] call distancePos)"] call Sort, _pos = getPos (_units select 0)
+	;player sidechat format ["(_orderPos select 0): %1",(_orderPos select 0)]
+	_sqdType = [_sqd] call classifySquad
+	_type = (_sqdTypes select _sqdType) select 1
+	_aliveCount = {alive _x} count _units
+	_sizeP = ((_aliveCount/_origCount)/1)+0.2;
+	?(_sizeP > 1): _sizeP = 1
+	_size = [_sizeP,_sizeP]
+	_color = "COLORBLUE"
+	?(_aliveCount == 0): _color = "COLORBLACK"
+	_mrkr = format ["SQCTL_gMrkr_%1",_c + 1]
+	_mrkr setMarkerType _type
+	_mrkr setMarkerPos _pos
+	_mrkr setMarkerColor _color
+	_mrkr setMarkerSize _size
+	~0.1
+	_c = _c + 1
+	?(_c < count _sqdsArr): goto "next"
+
+; 	Enemy squads
+	#enemySqds
+; 	Clear remaining friendly markers
+	[_c+1] exec "SQCTL\tracker\clearMarkers.sqs"
+
+	_eneArr = (SQCTL select 9)
+	_c = 0
+	?(count _eneArr < 1): goto "wait"
+	#nextE
+	_sqd = _eneArr select _c
+	_pos = getPos leader _sqd
+	_sqdType = [_sqd,"enemy"] call classifySquad
+	_type = (_sqdTypesE select _sqdType) select 1
+	_mrkr = format ["SQCTL_eMrkr_%1",_c + 1]
+	_mrkr setMarkerPos _pos
+	_mrkr setMarkerType _type
+	_mrkr setMarkerColor "COLORRED"
+	_mrkr setMarkerSize [1,1]
+	~0.1
+	_c = _c + 1
+	?(_c < count _eneArr): goto "nextE"
+
+	#wait
+; 	Clear remaining enemy markers
+	[-1,_c+1] exec "SQCTL\tracker\clearMarkers.sqs"
+	~_wait
+goto "loop"
+
+
+exit

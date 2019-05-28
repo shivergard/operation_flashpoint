@@ -1,0 +1,85 @@
+#doomsday
+
+_western = 0;
+
+#underfillgroup
+
+
+randomIdiotsNum = (random 10) + 1;
+randomIdiotsNum = randomIdiotsNum - randomIdiotsNum % 1;
+
+_westernPolice = 0;
+dummygroup = group idiots3;
+officerName = "OfficerE";
+
+?(randomIdiotsNum > 5):_westernPolice = 1;
+?(randomIdiotsNum > 5):officerName = "OfficerE";
+
+
+
+_randomBleNum = (random 9) + 1;
+_randomBleNum = _randomBleNum - _randomBleNum % 1;
+
+spectator setpos (getMarkerPos (format ["ble%1" , _randomBleNum]))
+
+
+#spawnleader
+officerName createUnit [(getMarkerPos (format ["ble%1" , _randomBleNum])), dummygroup]
+;assign to other group
+_member = (units dummygroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#underspawnrest
+
+_gender = "Woman";
+
+_random_gender = random 3;
+
+?(_random_gender > 1):_gender = "Civilian";
+?(_random_gender > 2):_gender = "Hunter";
+ 
+_randomNum = (random 5) + 1;
+?(_gender == "Civilian" ):_randomNum = (random 11) + 1;
+
+_randomNum = _randomNum - _randomNum % 1;
+
+?(_gender == "Civilian" && _randomNum == 1 ):_randomNum = 2;
+?(_gender == "Hunter" ):_randomNum = "";
+
+_randomWeapon = random 6;
+
+weapons = "this addMagazine ""Ak74""; this addMagazine ""Ak74"";  this addWeapon ""Ak74"";";
+?(_randomWeapon > 4):weapons = "this addWeapon ""Beretta""; this addMagazine ""BerettaMag""; this addMagazine ""BerettaMag""; ";
+?(_randomWeapon > 3):weapons = "this addWeapon ""Kozlice""; this addMagazine ""KozliceShell""; this addMagazine ""KozliceShell""; ";
+?(_randomWeapon > 2):weapons = "this addWeapon ""Revolver""; this addMagazine ""RevolverMag""; this addMagazine ""RevolverMag""; ";
+?(_randomWeapon > 1):weapons = "this addWeapon ""XMS""; this addMagazine ""M4""; this addMagazine ""M4""; ";
+ 
+
+?(_westernPolice == 1):weapons = "removeAllWeapons this; this addWeapon ""M16""; this addMagazine ""M16""; ";
+?(_westernPolice == 1):_gender = "Civilian11";
+?(_westernPolice == 1):_randomNum = "";
+?(_westernPolice == 1):_western = _western + 1;
+
+_newunit = format ["%1%2", _gender , _randomNum] createUnit [(getMarkerPos (format ["ble%1" , _randomBleNum])), _grp , weapons];
+
+
+
+?(count units _grp == 5):goto "undergroupfull"
+goto "underspawnrest"
+
+#undergroupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+;group info
+hint format ["Group:%1 at %5 Units:%2 \nleader:%3 \nGroups:%4 \n_western:%6",_grp,(count units _grp),(leader _grp),(count allgroups) , (format ["ble%1" , _randomBleNum]) , (format ["!%1" , _western])]
+
+
+[leader _grp,300,20] exec "randpatrol.sqs"
+
+~60
+
+
+goto "underfillgroup"

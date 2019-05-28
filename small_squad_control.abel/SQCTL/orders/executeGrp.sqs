@@ -1,0 +1,127 @@
+; EXECUTE ORDER - GROUP
+
+; Hide orders menu
+;[] exec "SQCTL\orders\hideOrders.sqs"
+
+_arr = call (_this select 0)
+_i = _arr select 0
+_order = _arr select 1
+_status = _this select 1
+_sqArr = _this select 2
+
+_formation = call (_status select 0)
+_behavior = call (_status select 1)
+_combatMode = call (_status select 2)
+_speedMode = call (_status select 3)
+
+;player sidechat format ["_behavior: %1,_combatMode: %2,_speedMode: %3,_formation: %4",_behavior,_combatMode,_speedMode,_formation]
+
+; Update group orders
+_grpArr = (SQCTL select 6) select _i
+_name = _grpArr select 0
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_order > 0): _grpArr set [1, _order], _grpArr set [2, _pos]
+
+; Update position of objective marker
+_mrkr = "SQCTL_obj"
+_mrkrType = "box"
+_mrkr setMarkerPos _pos
+
+_beh = ""
+_combatM = ""
+_speedM = ""
+_form = ""
+_radForm = ""
+
+_formations = call loadfile "SQCTL\orders\formations.sqf"
+_behaviors = call loadfile "SQCTL\orders\behaviors.sqf"
+_combatModes = call loadfile "SQCTL\orders\combatModes.sqf"
+_speedModes = call loadfile "SQCTL\orders\speedModes.sqf"
+
+call loadfile "SQCTL\orders\setStatusGrp.sqf"
+
+; Set old status if it hasn't changed
+_oldStatus = _grpArr select 3
+?(_behavior == 0): _behavior = _oldStatus select 0, _beh = (_behaviors select _behavior) select 0;
+?(_combatMode == 0): _combatMode = _oldStatus select 1, _combatM = (_combatModes select _combatMode) select 1;
+?(_speedMode == 0): _speedMode = _oldStatus select 2, _speedM = (_speedModes select _speedMode) select 0;
+?(_formation == 0): _formation = _oldStatus select 3, _form = (_formations select _formation) select 0;
+
+; Update group status
+?(_order > 0): _grpArr set [3, [_behavior,_combatMode,_speedMode,_formation]]
+
+;_status = call format [{["%1","%2","%3","%4"]},_formation,_behavior,_combatMode,_speedMode]
+
+; Orders that require a formation
+_formOrder = [2,4,5,6,7]
+?(_order in _formOrder and count _sqArr > 1): goto "groupFormation"
+
+#execute
+; Execute orders
+_c = 0
+{ _ldrGrp = if (_c == 0) then { true } else { false };call format [{["%1",%2,"group",%3] exec "SQCTL\orders\execute.sqs";},[_x,_order],_status,_ldrGrp]; _c = _c + 1 } forEach _sqArr
+
+exit
+
+#groupFormation
+; Set leader and follower squads
+_ldrSq = _sqArr select 0
+?(_order == 2): _ldrSq = 50, _sqArr = [_ldrSq] + _sqArr
+_followSq = _sqArr - [_ldrSq]
+; Sort squads based on distance to leader squad
+?(count _followSq > 1): _ldrGrp = vehicle leader (SQCTL select _ldrSq select 0);[_followSq , "((vehicle leader ((SQCTL select _element) select 0)) distance _ldrGrp)"] call sort
+;player sidechat format ["_followSq: %1",_followSq]
+; Set first follower squad
+_followGrpLdr = leader (SQCTL select (_followSq select 0) select 0)
+; Delete old formation
+SQCTL set [4, [_ldrSq,SQCTL select 4] call trim2darr]
+~0.1
+SQCTL set [4, [_followSq select 0,SQCTL select 4] call trim2darr]
+~1.5
+; Retrieve active formations
+_formedSqds = SQCTL select 4
+;player sidechat format ["_formedSqds: %1",_formedSqds]
+; Add new formation to global array
+_formedSqds set [count _formedSqds, _sqArr]
+;player sidechat format ["_formedSqds: %1",_formedSqds]
+; Set parameters for new formation based on order
+_formCheckInterval = 1
+_point = false
+?(_order == 2 and (SQCTL select 13)): _point = true, _pos = [-1]
+_stance = "AUTO"
+_degrees = 130
+_dist = (10 * (count units _ldrGrp)) + 10
+;player sidechat format ["_form: %1",_form]
+?(_form == "COLUMN" or _form == "STAG COLUMN"): _degrees = 180
+?(_form == "LINE"): _degrees = 90
+?(_form == "VEE"): _degrees = 40
+; Start the formation
+[[_ldrSq],_followSq,_dist,_degrees,5,_formCheckInterval,_form,_beh,_stance,_point] exec "SQCTL\orders\follow_toadlife_edit.sqs"
+
+; Set objective marker type
+_mrkr setMarkerType _mrkrType
+
+; Execute order on leader
+?(_order == 4 or _order == 5 or _order == 6 or _order == 7): call format [{["%1",%2,"group",true] exec "SQCTL\orders\execute.sqs";},[_ldrSq,_order],_status]
+
+; Update current order and status of follower squads
+{_grpArr = SQCTL select _x; _grpArr set [3, [_order,_pos]]; _grpArr set [4, [_behavior,_combatMode,_speedMode,_formation]];} forEach _followSq
+
+; Follow me order
+?(_order == 2): goto "followme"
+exit
+
+#followme
+; Issue orders
+_ldrGrp = (SQCTL select _ldrSq) select 0
+_ldrGrp setFormation _form
+_ldrGrp setBehaviour _beh
+_ldrGrp setCombatMode _combatM
+_ldrGrp setSpeedMode _speedM
+; Update objective marker
+_mrkr setMarkerType "empty"
+; Radio message
+player sidechat format [localize "STR_SQCTL_ORDERFOLLOW",_name,_radForm]
+~1
+_followGrpLdr sidechat localize "STR_SQCTL_ROGER"
+exit

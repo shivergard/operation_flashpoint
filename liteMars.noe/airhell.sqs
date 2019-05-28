@@ -1,0 +1,73 @@
+#airhell
+
+westernAir = 0;
+
+#fillgroup
+
+hint "AirHell Active";
+
+
+airRandomIdiotsNum = (random 10) + 1;
+airRandomIdiotsNum = airRandomIdiotsNum - airRandomIdiotsNum % 1;
+
+westernAirPolice = 0;
+AirDummyGroup = group idiots3;
+officerName = "SoldierELAW";
+
+?(airRandomIdiotsNum > 5):AirDummyGroup = group idiots4;
+?(airRandomIdiotsNum > 5):officerName = "SoldierWLAW";
+?(airRandomIdiotsNum > 5):westernAirPolice = 1;
+
+
+
+airRandomBleNum = (random 9) + 1;
+airRandomBleNum = airRandomBleNum - airRandomBleNum % 1;
+
+airspectator setpos (getMarkerPos (format ["jop%1" , airRandomBleNum]))
+
+
+#airSpawnleader
+officerName createUnit [(getMarkerPos (format ["jop%1" , airRandomBleNum])), AirDummyGroup]
+;assign to other group
+_member = (units AirDummyGroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#airSpawnRest
+AirGender = "M60";
+airRandomAirGender = random 3;
+?(airRandomAirGender > 1):AirGender = "T80";
+?(airRandomAirGender > 2):AirGender = "Kamov";
+airRandomNum = "";
+
+weapons = "";
+?(westernAirPolice == 1):westernAir = westernAir + 1;
+
+
+driver = (officerName createUnit [(getMarkerPos (format ["jop%1" , airRandomBleNum])), _grp , weapons]);
+
+unitname = (format ["%1", AirGender]);
+;unitname createVehicle (getMarkerPos (format ["jop%1" , airRandomBleNum])) driver;
+;driver assignAsCommander (format ["%1", AirGender]);
+
+?(count units _grp == 10):goto "airGroupfull";
+
+
+goto "airSpawnRest"
+
+(units _grp) orderGetIn 1;
+
+#airGroupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+;group info
+hint format ["Group:%1 at %5 Units:%2 \nLeader:%3 \nGroups:%4 \nwesternAir:%6",_grp,(count units _grp),(leader _grp),(count allgroups) , (format ["jop%1" , airRandomBleNum]) , (format ["!%1" , westernAir])]
+
+[leader _grp,300,20] exec "randpatrol.sqs"
+
+~10
+
+
+goto "airhell"

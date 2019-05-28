@@ -1,0 +1,70 @@
+#airhell
+
+westernAir = 0;
+
+#fillgroup
+
+hint "AirHell Active";
+
+
+randomIdiotsNum = (random 10) + 1;
+randomIdiotsNum = randomIdiotsNum - randomIdiotsNum % 1;
+
+westernAirPolice = 0;
+dummygroup = group idiots2;
+officerName = "SoldierELAW";
+
+?(randomIdiotsNum > 5):dummygroup = group idiots1;
+?(randomIdiotsNum > 5):westernAirPolice = 1;
+
+
+
+randomBleNum = (random 9) + 1;
+randomBleNum = randomBleNum - randomBleNum % 1;
+
+airspectator setpos (getMarkerPos (format ["jop%1" , randomBleNum]))
+
+
+#spawnleader
+officerName createUnit [(getMarkerPos (format ["jop%1" , randomBleNum])), dummygroup]
+;assign to other group
+_member = (units dummygroup) select 1
+[_member] join grpNull
+_grp = group _member
+
+#spawnrest
+
+gender = "M60";
+
+randomGender = random 3;
+
+?(randomGender > 1):gender = "T80";
+?(randomGender > 2):gender = "Kamov";
+ 
+randomNum = "";
+
+weapons = "";
+
+?(westernAirPolice == 1):westernAir = westernAir + 1;
+
+newunit = format ["%1%2", gender , randomNum] createUnit [(getMarkerPos (format ["jop%1" , randomBleNum])), _grp , weapons];
+
+
+
+?(count units _grp == 5):goto "groupfull"
+goto "spawnrest"
+
+#groupfull
+; register new group in groupsarray for later use
+?(count allgroups == 0):allgroups = [_grp]
+?(!(_grp in allgroups)):allgroups = allgroups + [_grp]
+
+;group info
+hint format ["Group:%1 at %5 Units:%2 \nLeader:%3 \nGroups:%4 \nwesternAir:%6",_grp,(count units _grp),(leader _grp),(count allgroups) , (format ["jop%1" , randomBleNum]) , (format ["!%1" , westernAir])]
+
+[leader _grp,300,20] exec "randpatrol.sqs"
+
+~10
+
+
+goto "airhell"
