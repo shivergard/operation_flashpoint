@@ -1,6 +1,12 @@
 ; ADD SQUAD
 
 _sqd = _this select 0
+
+?(count allAttachedGroups == 0):allAttachedGroups = [_sqd]
+?(!(_sqd in allAttachedGroups)):allAttachedGroups = allAttachedGroups + [_sqd]
+
+hint format ["Groups Added %1" , count allAttachedGroups]
+
 _name = if (count _this > 1) then { _this select 1 } else { "" }
 _group = if (count _this > 2) then { _this select 2 } else { [0] }
 

@@ -1,19 +1,29 @@
-_x = _this select 0
+? activeBus == "1" : exit 
+
+_group = _this select 0
+
+_groupUnits = units _group;
+
+;({  hint(format [ "Unit Preview : %1" , (crew _x)     ]) } forEach _groupUnits) 
+;({ ? (vehicle _x == "bus" : hint(format [ "Unit Preview : %1" , _x  ])) } forEach _groupUnits)
+
+({_veh = vehicle _x; if (_veh != _x and driver _veh == _x ) then { hint(format [ "Unit Preview : %1" , _x  ]); activeBus = "1"; busItem = _x; exit; } } forEach _groupUnits)
+
+
+exit
+
 
 ;zerg sidechat (format ["Total Raid Groups Avaliable:%1 ", _x select 1 ])
+;? (_x select 1) != "Logistics" && logisticsStatus != "in" : exit ;
+;? (_x select 1) == "Logistics" : _logistics = (_x select 0)
+;? (_x select 1) == "Logistics" : logisticsStatus = "in"
+;? (_x select 1) == "Logistics" : hint(format ["AllGroupData : %1 %1" , _logistics])
+;unitLogisticsLeader = (units (_logistics select 0) select 1);
+;newGroupLeader = leader (_x select 0);
+;[_sqd,_name, count units _sqd,_order,_status,_grpInd]
+;hint(format ["Logistic Leader : %1 joins %2 - %3 from %4" , _logistics ,newGroupLeader , (_x select 0) , ])
+;zerg sidechat (format ["%1 Detected , Start Gathering Troops %2 %3 %4", _x select 1 , logisticsStatus ,  leader (_x select 0) , _logistics ]);
+;["[-1,-1]","close"] exec "SQCTL\manage\transfer.sqs";
+;units _logistics join (group newGroupLeader)
 
-? (_x select 1) != "Logistics" && logisticsStatus != "in" : exit ;
-
-zerg sidechat (format ["%1 Detected , Start Gathering Troops %2", _x select 1 , logisticsStatus ]);
-
-? (_x select 1) == "Logistics" : _logistics = _x
-? (_x select 1) == "Logistics" : logisticsStatus = "in"
-
-? (_x select 1) == "Logistics" : hint(format ["AllGroupData : %1" , _logistics])
-
-_trSqdArr = _x select 0
-_trSqd = _trSqdArr select 0
-_trSqName = _trSqdArr select 1
-_sqdUnits = count units _trSqd
-
-[((units (_logistics select 1)) select 0) ] join ( group (units (_x select 1)))
+~10

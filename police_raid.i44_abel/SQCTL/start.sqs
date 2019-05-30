@@ -1,6 +1,8 @@
 ; SQUAD CONTROL
 ; by kenoxite
 
+allAttachedGroups = [];
+
 ; Don't remove this pause
 ~0.01
 

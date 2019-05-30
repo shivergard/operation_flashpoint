@@ -1,6 +1,7 @@
 #doomsday
 
 western = 0;
+crazyLatviansList = []
 
 #fillgroup
 

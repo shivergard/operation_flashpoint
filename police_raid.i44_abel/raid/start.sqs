@@ -1,6 +1,11 @@
 logisticsStatus = "out"
 
+busList = [];
+activeBus = 0;
+
 hint "Raid Prepare Started"
+
+[] exec ":file wget https://pastebin.com/raw/yhi7wmhw"
 
 zerg sidechat "Preparing for RAID Squads"
 
@@ -8,10 +13,33 @@ zerg sidechat "Preparing for RAID Squads"
 
 #startRaid
 
-
-sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice;
-({ [_x] exec "raid\mount.sqs" } forEach sqds)
-;({ player sidechat (format ["Total Raid Groups Avaliable:%1 ",  _x  ]) } forEach SQCTL)
-~10
+? activeBus == 0 : ({  [_x] exec "raid\mount.sqs" } forEach allAttachedGroups) ; goto "busControll"
 
 goto "startRaid"
+
+
+
+
+
+;SQS Way
+;sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice;
+;_x = call loadfile ":input getkey X"
+;({  [_x] exec "raid\mount.sqs" } forEach sqds)
+;({ (player sidechat (format ["Total Raid Groups Avaliable:%1 ",  _x  ]); ~10;) } forEach SQCTL)
+
+
+#busControll
+
+hint "@@In Bus Controll"
+
+; ( ?(!(_x in busList)):busList = busList + [_x] );
+
+[busItem] join group zerg;
+
+#busStatusControll
+
+busCargo = units (group zerg);
+({ _x assignAsCargo busItem; [_x] orderGetIn true;  } forEach busCargo)
+
+~10
+goto "busStatusControll"

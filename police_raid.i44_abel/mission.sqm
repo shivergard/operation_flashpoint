@@ -45,6 +45,7 @@ class Mission
 					id=1;
 					side="EAST";
 					vehicle="CONFO";
+					leader=1;
 					skill=0.600000;
 				};
 				class Item1
@@ -54,7 +55,6 @@ class Mission
 					side="EAST";
 					vehicle="Civilian11";
 					player="PLAYER COMMANDER";
-					leader=1;
 					skill=0.600000;
 					init="[] exec ""raid\start.sqs"";[] exec ""SQCTL\start.sqs"";this allowDammage false; removeAllWeapons this; this addWeapon ""remington""; this addMagazine ""RevMag""; this addMagazine ""RevMag""; this addMagazine ""RevMag""; this addMagazine ""RevMag""; this addMagazine ""RevMag""; this addMagazine ""RevMag""; ";
 				};
