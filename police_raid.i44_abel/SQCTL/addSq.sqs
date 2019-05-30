@@ -1,0 +1,53 @@
+; ADD SQUAD
+
+_sqd = _this select 0
+_name = if (count _this > 1) then { _this select 1 } else { "" }
+_group = if (count _this > 2) then { _this select 2 } else { [0] }
+
+; Set default order
+_order = [1,[-1]]
+
+; Set squad's status
+_null=format["%1",_nullstring];
+@(format["%1",processSqStatus] != _null)
+~random 1
+_status = [_sqd] call processSqStatus
+;player sidechat format ["_status: %1",_status]
+
+_grpInd = _group select 0
+_grpName = if (count _group > 1) then { _group select 1 } else { "" }
+
+@(SQCTL select 0)
+_i = if (count SQCTL < 50) then { 50 } else { count SQCTL }
+?(_name == ""): _name = format [localize "STR_SQCTL_SQNAMEDEF", (_i - 50)]
+SQCTL set [_i, [_sqd,_name, count units _sqd,_order,_status,_grpInd]]
+
+; Allow fleeing?
+_fleeing = if (SQCTL select 12) then { 1 } else { 0 }
+_sqd allowFleeing _fleeing
+
+; Set new group if it doesn't exist yet
+_grpArr = SQCTL select 6
+_cGrpArr = count _grpArr
+
+; Create new group
+?(_grpInd <= 0): exit
+_newName = if (_grpName != "") then { _grpName } else { format [localize "STR_SQCTL_GRNAMEDEF", _grpInd] }
+?(_cGrpArr > _grpInd and _grpName != ""): (_grpArr select _grpInd) set [0,_newName]
+?(_cGrpArr > _grpInd): exit
+_grpArr set [_grpInd, [_newName,1,[-1],[1,1,1,1]]]
+exit
+
+; SQUADS
+; 0: game's group
+; 1: squad name
+; 2: original units count
+; 3: orders: [current order, objective position]
+; 4: status: [behaviour, combat, speed, formation]
+; 5: group the squad belongs to
+;
+; GROUPS
+; 0: group name
+; 1: current order
+; 2: objective position
+; 3: status: [behaviour, combat, speed, formation]

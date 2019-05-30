@@ -1,0 +1,49 @@
+; Init RAID mode
+
+	[] exec raid\start.sqs
+	
+
+
+
+; Fwatch detection
+
+	~0.1
+	? localize "STR_USRACT_CHEAT_1" != "FWATCH" : hint "Cannot detect Fwatch\n\nStart the game with fwatch.exe"; exit
+
+	_version = call loadFile ":info version"
+	? _version < 1.15 : hint "Fwatch 1.15 or newer required.\n\nPlease update your version."; exit
+
+
+	
+	
+	; Start the program
+	~1
+	hint "Downloading..."
+	_ok = call loadFile "\:EXE WGET  http://ofp-faguss.com/getItemVersion.php?item=fwatch"
+	? !(_ok select 0) : hint (_ok select 3); exit
+	_pid = _ok select 4
+
+	
+	
+	
+	; Wait for the program to finish
+	#Wait
+	~0.01
+	_ok = call loadFile Format ["\:EXE WGET  check %1", _pid]
+	? _ok select 0 : goto "Wait"
+	
+	
+	; Check result file
+	_ok = call loadFile Format ["\:IGSE LOAD  file:..\fwatch\tmp\%1.pid  mode:execute  delete:true  wait:50", _pid]
+	? (_ok select 0) != 0 : hint Format ["wget error %1",_ok select 0]; exit
+	
+	
+	; Read downloaded file
+	_WebVersion = call loadFile "\:IGSE LOAD  file:..\fwatch\tmp\getItemVersion.php@item=fwatch  mode:execute  delete:true  wait:50"
+	? !(_WebVersion in [_WebVersion]) : hint (_WebVersion select 3); exit
+	
+	_YourVersion = call loadFile ":info version"
+	hint Format ["Data downloaded\n\nCurrent Fwatch version is:\n%1\n\nYours:\n%2", _WebVersion, _YourVersion]
+	
+	
+

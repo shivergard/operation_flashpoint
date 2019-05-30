@@ -1,0 +1,162 @@
+; SHOW ORDERS
+
+_i = _this select 0
+_mode = if (count _this > 1) then { _this select 1 } else { "simple" }
+
+_grpArr = SQCTL select _i
+_order = (_grpArr select 3) select 0
+_orderPos = (_grpArr select 3) select 1
+_grp = (_grpArr select 0)
+_statuses = _grpArr select 4
+_behavior = _statuses select 0
+_combatmode = _statuses select 1
+_speed = _statuses select 2
+_formation = _statuses select 3
+
+; Show objective marker
+_haveMarker = [4,5,6,7,8]
+_mrkr = "SQCTL_obj"
+_mrkr setMarkerType "box"
+?!(_order in _haveMarker): _mrkr setMarkerType "empty"
+?((_orderPos select 0) > 0):_mrkr setMarkerPos _orderPos
+
+; Show orders menu
+ctrlShow [200, true]
+ctrlShow [201, true]
+ctrlShow [202, true]
+ctrlShow [203, true]
+ctrlShow [204, false]
+ctrlShow [205, false]
+ctrlShow [206, false]
+ctrlShow [207, false]
+ctrlShow [208, false]
+ctrlShow [209, false]
+ctrlShow [210, false]
+ctrlShow [211, false]
+ctrlShow [212, false]
+ctrlShow [213, true]
+ctrlShow [214, true]
+
+
+; Set "Advanced" order button
+_idc7 = 213
+_text = if (_mode == "simple") then { localize "STR_SQCTL_ADVANCEDORDERS" } else { localize "STR_SQCTL_SIMPLEORDERS" }
+ctrlSetText [_idc7, _text] 
+_actMode = if (_mode == "simple") then { "advanced" } else { "simple" }
+if (_mode == "simple") then { SQCTL set [11, false] } else { SQCTL set [11, true] }
+_action = format [{[%1,"%2"] exec "SQCTL\orders\showOrders.sqs"},_i,_actMode]
+buttonSetAction [_idc7, _action]
+
+; Check if an order was previously selected
+_selOrder = if ((lbCurSel 202) > 0) then { lbCurSel 202 } else { 0 }
+
+; Set "Cancel" order button
+_idc8 = 214
+_text = localize "STR_SQCTL_CANCEL"
+ctrlSetText [_idc8, _text] 
+_action = {[] exec "SQCTL\orders\hideOrders.sqs"}
+buttonSetAction [_idc8, _action]
+
+; Show advanced menu, if appropriate
+?(_mode == "advanced"): ctrlShow [204, true]
+?(_mode == "advanced"): ctrlShow [205, true]
+?(_mode == "advanced"): ctrlShow [206, true]
+?(_mode == "advanced"): ctrlShow [207, true]
+?(_mode == "advanced"): ctrlShow [208, true]
+?(_mode == "advanced"): ctrlShow [209, true]
+?(_mode == "advanced"): ctrlShow [210, true]
+?(_mode == "advanced"): ctrlShow [211, true]
+?(_mode == "advanced"): ctrlShow [212, true]
+
+; Fill Orders list box
+_idc1 = 202
+lbClear _idc1
+_selected = false
+_c = 0
+_orders = call loadfile "SQCTL\orders\orders.sqf"
+;player sidechat format ["_orders: %1",_orders]
+#addOrders
+_text = (_orders select _c) select 0
+_index = lbAdd [_idc1, _text]
+_data = format ["[%1,%2]",_i,_c]
+lbSetData [_idc1, _index, _data]
+?(!_selected): lbSetCurSel [_idc1, 0], _selected = true
+_c = _c + 1
+?(_c < (count _orders)): goto "addOrders"
+if (_selOrder > 0) then { lbSetCurSel [_idc1, _selOrder] } else { lbSetCurSel [_idc1, _order] }
+
+; Fill Formations list box
+_idc3 = 204
+lbClear _idc3
+_selected = false
+_c = 0
+_formations = call loadfile "SQCTL\orders\formations.sqf"
+;player sidechat format ["_formations: %1",_formations]
+#addFormations
+_text = (_formations select _c) select 0
+_index = lbAdd [_idc3, _text]
+_data = format ["%1",_c]
+lbSetData [_idc3, _index, _data]
+?(!_selected): lbSetCurSel [_idc3, 0], _selected = true
+_c = _c + 1
+?(_c < (count _formations)): goto "addFormations"
+?(_mode == "advanced"): lbSetCurSel [_idc3, _formation]
+
+; Fill Behavior list box
+_idc4 = 207
+lbClear _idc4
+_selected = false
+_c = 0
+_behaviors = call loadfile "SQCTL\orders\behaviors.sqf"
+;player sidechat format ["_formations: %1",_formations]
+#addBehaviors
+_text = (_behaviors select _c) select 0
+_index = lbAdd [_idc4, _text]
+_data = format ["%1",_c]
+lbSetData [_idc4, _index, _data]
+?(!_selected): lbSetCurSel [_idc4, 0], _selected = true
+_c = _c + 1
+?(_c < (count _behaviors)): goto "addBehaviors"
+?(_mode == "advanced"): lbSetCurSel [_idc4, _behavior]
+
+; Fill Combat Mode list box
+_idc5 = 209
+lbClear _idc5
+_selected = false
+_c = 0
+_combatModes = call loadfile "SQCTL\orders\combatmodes.sqf"
+#addcombatModes
+_text = (_combatModes select _c) select 0
+_index = lbAdd [_idc5, _text]
+_data = format ["%1",_c]
+lbSetData [_idc5, _index, _data]
+?(!_selected): lbSetCurSel [_idc5, 0], _selected = true
+_c = _c + 1
+?(_c < (count _combatModes)): goto "addcombatModes"
+?(_mode == "advanced"): lbSetCurSel [_idc5, _combatmode]
+
+; Fill Speed list box
+_idc6 = 211
+lbClear _idc6
+_selected = false
+_c = 0
+_speedModes = call loadfile "SQCTL\orders\speedModes.sqf"
+;player sidechat format ["_formations: %1",_formations]
+#addspeedMode
+_text = (_speedModes select _c) select 0
+_index = lbAdd [_idc6, _text]
+_data = format ["%1",_c]
+lbSetData [_idc6, _index, _data]
+?(!_selected): lbSetCurSel [_idc6, 0], _selected = true
+_c = _c + 1
+?(_c < (count _speedModes)): goto "addspeedMode"
+?(_mode == "advanced"): lbSetCurSel [_idc6, _speed]
+
+; Set "Issue" order button
+_idc2 = 203
+_text = localize "STR_SQCTL_ISSUE"
+ctrlSetText [_idc2, _text] 
+_action = format [{[lbData [%1, lbCurSel %1],[lbData [%2, lbCurSel %2],lbData [%3, lbCurSel %3],lbData [%4, lbCurSel %4],lbData [%5, lbCurSel %5]]] exec "SQCTL\orders\execute.sqs";},_idc1,_idc3,_idc4,_idc5,_idc6]
+buttonSetAction [_idc2, _action]
+
+exit

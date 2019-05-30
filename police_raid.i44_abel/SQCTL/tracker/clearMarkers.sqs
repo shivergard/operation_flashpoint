@@ -1,0 +1,21 @@
+; CLEAR MARKERS
+
+_fMrkrIndex = if (count _this > 0) then { _this select 0 } else { -1 }
+_eMrkrIndex = if (count _this > 1) then { _this select 1 } else { -1 }
+
+_maxMrkrF = 30
+_maxMrkrE = 30
+
+?(_fMrkrIndex < 0): goto "enemies"
+; Clear friendly markers
+_c = _fMrkrIndex
+while { _c < _maxMrkrF } do { _mrkr = format ["SQCTL_gMrkr_%1",_c]; _mrkr setMarkerType "empty"; _c = _c + 1 }
+
+#enemies
+?(_eMrkrIndex < 0): exit
+; Clear enemy markers
+_c = _eMrkrIndex
+while { _c < _maxMrkrE } do { _mrkr = format ["SQCTL_eMrkr_%1",_c]; _mrkr setMarkerType "empty"; _c = _c + 1 }
+
+
+exit

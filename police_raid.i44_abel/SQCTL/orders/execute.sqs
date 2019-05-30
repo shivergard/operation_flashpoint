@@ -1,0 +1,318 @@
+; EXECUTE ORDER
+
+; Hide orders menu
+;[] exec "SQCTL\orders\hideOrders.sqs"
+
+_arr = call (_this select 0)
+_i = _arr select 0
+_order = _arr select 1
+_status = _this select 1
+_mode = if (count _this > 2) then { _this select 2 } else { "" }
+_ldrGrp = if (count _this > 3) then { _this select 3 } else { true }
+
+_formation = call (_status select 0)
+_behavior = call (_status select 1)
+_combatMode = call (_status select 2)
+_speedMode = call (_status select 3)
+
+_sqArr = SQCTL select _i
+_sqd = _sqArr select 0
+_name = _sqArr select 1
+_grp = _sqArr select 5
+_units = units _sqd
+
+_formations = call loadfile "SQCTL\orders\formations.sqf"
+_behaviors = call loadfile "SQCTL\orders\behaviors.sqf"
+_combatModes = call loadfile "SQCTL\orders\combatModes.sqf"
+_speedModes = call loadfile "SQCTL\orders\speedModes.sqf"
+
+; Update current status
+;_sqArr set [4, [_behavior,_combatMode,_speedMode,_formation]]
+
+;player sidechat format ["_behavior: %1,_combatMode: %2,_speedMode: %3,_formation: %4",_behavior,_combatMode,_speedMode,_formation]
+
+_beh = ""
+_combatM = ""
+_speedM = ""
+_form = ""
+_radForm = ""
+
+_mrkr = "SQCTL_obj"
+_mrkrType = "box"
+
+goto format ["%1",_order]
+exit
+
+#0
+; NO CHANGE
+call loadfile "SQCTL\orders\setStatus.sqf"
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+?(_formation > 0 or _behavior > 0 or _combatMode > 0 or _speedMode > 0): player sidechat format ["%1%2",_name,_radForm]
+~1
+?(_formation > 0 or _behavior > 0 or _combatMode > 0 or _speedMode > 0): (leader _sqd) sidechat localize "STR_SQCTL_ROGER"
+exit
+
+#1
+; ON YOUR OWN
+; Remove squad from previous formation
+SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+_units allowGetIn true 
+_combatMode = 1
+_speedMode = 1
+{ _x setUnitPos "AUTO" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+; Update objective marker
+_mrkr setMarkerType "empty"
+; Update current order
+_sqArr set [3, [_order,[-1]]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+player sidechat format [localize "STR_SQCTL_ORDERFREE",_name,_radForm]
+~1
+leader _sqd sidechat localize "STR_SQCTL_ROGER"
+exit
+
+#2
+; FOLLOW
+; Remove squad from previous formation
+SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Check if player is already leading a formation
+_formIndex = [50,SQCTL select 4] call in2Darray
+_addToForm = if (_formIndex >= 0) then { true } else { false }
+_sqArr = [50,_i]
+_ldrSq = 50
+_followSq = _sqArr - [_ldrSq]
+_formedSqds = SQCTL select 4
+; Add follower squad to formation or create a new one
+?(!_addToForm): _formedSqds set [count _formedSqds, _sqArr]
+?(_addToForm): _formedSqds set [_formIndex, (_formedSqds select _formIndex) + [_i]]
+;player sidechat format ["_formedSqds: %1",_formedSqds]
+;player sidechat format ["_formIndex: %1",_formIndex]
+;player sidechat format ["_addToForm: %1",_addToForm]
+; Set formation parameters
+if (_formation > 0) then { _form = (_formations select _formation) select 0 } else { _form = "WEDGE", _formation = 1 }
+call loadfile "SQCTL\orders\setStatus.sqf"
+_formCheckInterval = 1
+_degrees = 130
+_ldrGrp = group player
+_dist = (10 * (count units _ldrGrp)) + 10
+?(_form == "COLUMN" or _form == "STAG COLUMN"): _degrees = 180
+?(_form == "LINE"): _degrees = 90
+?(_form == "VEE"): _degrees = 40
+?(!_addToForm): [[_ldrSq],_followSq,_dist,_degrees,5,_formCheckInterval,_form,_beh,"auto",true] exec "SQCTL\orders\follow_toadlife_edit.sqs"
+; Update objective marker
+_mrkr setMarkerType "empty"
+; Radio message
+player sidechat format [localize "STR_SQCTL_ORDERFOLLOW",_name,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGER"
+; Update current order
+_sqArr set [3, [_order,[-1]]]
+exit
+
+#3
+; HALT
+; Remove squad from previous formation
+SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+_pos = getPos (vehicle leader _sqd)
+_sqd Move _pos
+; Update objective marker
+_mrkr setMarkerType "empty"
+call loadfile "SQCTL\orders\setStatus.sqf"
+; Update current order
+_sqArr set [3, [_order,_pos]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+player sidechat format [localize "STR_SQCTL_ORDERHALT",_name,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGER"
+exit
+
+#4
+; MOVE TO POSITION
+; Remove squad from previous formation
+?(_mode == ""): SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+;_units allowGetIn true 
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_formation > 0): _form = (_formations select _formation) select 0
+?(_formation == 0): _form = "WEDGE", _formation = 1
+?(_behavior == 0): _behavior = 1
+?(_combatMode == 0): _combatMode = 1
+?(_speedMode == 0): _speedMode = 1
+{ _x setUnitPos "AUTO" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+_sqd move _pos
+; Update objective marker
+_mrkr setMarkerPos _pos
+_mrkr setMarkerType _mrkrType
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+_grid = _pos call f_pos2grid;
+player sidechat format [localize "STR_SQCTL_ORDERMOVE",_name,_grid,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGERTOPOS"
+; Update current order
+_sqArr set [3, [_order,_pos]]
+exit
+
+#5
+; SNEAK TO POSITION
+; Remove squad from previous formation
+?(_mode == ""): SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+;_units allowGetIn true 
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_formation > 0): _form = (_formations select _formation) select 0
+?(_formation == 0): _form = "WEDGE", _formation = 1
+?(_behavior == 0): _behavior = 4
+?(_combatMode == 0): _combatMode = 3
+?(_speedMode == 0): _speedMode = 1
+{ _x setUnitPos "DOWN" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+_sqd move _pos
+; Update objective marker
+_mrkr setMarkerPos _pos
+_mrkr setMarkerType _mrkrType
+; Update current order
+_sqArr set [3, [_order,_pos]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+_grid = _pos call f_pos2grid;
+player sidechat format [localize "STR_SQCTL_ORDERSNEAK",_name,_grid,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGERSNEAKTOPOS"
+exit
+
+#6
+; ATTACK POSITION
+; Remove squad from previous formation
+?(_mode == ""): SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+;_units allowGetIn true 
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_formation > 0): _form = (_formations select _formation) select 0
+?(_formation == 0): _form = "LINE", _formation = 2
+?(_behavior == 0): _behavior = 2
+?(_combatMode == 0): _combatMode = 2
+?(_speedMode == 0): _speedMode = 3
+{ _x setUnitPos "AUTO" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+_sqd move _pos
+; Update objective marker
+_mrkr setMarkerPos _pos
+_mrkr setMarkerType _mrkrType
+; Update current order
+_sqArr set [3, [_order,_pos]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+_grid = _pos call f_pos2grid;
+player sidechat format [localize "STR_SQCTL_ORDERATTACK",_name,_grid,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGERATTACKING"
+exit
+
+#7
+; DEFEND POSITION
+; Remove squad from previous formation
+?(_mode == ""): SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+;_units allowGetIn true 
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_formation > 0): _form = (_formations select _formation) select 0
+?(_formation == 0): _form = "LINE", _formation = 2
+?(_behavior == 0): _behavior = 2
+?(_combatMode == 0): _combatMode = 1
+?(_speedMode == 0): _speedMode = 1
+{ _x setUnitPos "AUTO" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+_sqd move _pos
+; Update objective marker
+_mrkr setMarkerPos _pos
+_mrkr setMarkerType _mrkrType
+; Update current order
+_sqArr set [3, [_order,_pos]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+_grid = _pos call f_pos2grid;
+player sidechat format [localize "STR_SQCTL_ORDERDEFEND",_name,_grid,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGERDEFENDING"
+exit
+
+#8
+; RETREAT
+; Remove squad from previous formation
+SQCTL set [4, [_i,SQCTL select 4] call trim2dArrEle]
+; Issue order
+;_units allowGetIn true 
+_pos = getMarkerPos "SQCTL_mapControl"
+?(_formation == 0): _formation = 1
+?(_behavior == 0): _behavior = 1
+?(_combatMode == 0): _combatMode = 4
+?(_speedMode == 0): _speedMode = 3
+{ _x setUnitPos "UP" } forEach _units
+call loadfile "SQCTL\orders\setStatus.sqf"
+_sqd move _pos
+; Update objective marker
+_mrkr setMarkerPos _pos
+_mrkr setMarkerType _mrkrType
+; Update current order
+_sqArr set [3, [_order,_pos]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+_grid = _pos call f_pos2grid;
+player sidechat format [localize "STR_SQCTL_ORDERRETREAT",_name,_grid,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGERRETREATING"
+exit
+
+#9
+; MOUNT
+; Issue order
+_units allowGetIn true 
+_units orderGetIn true 
+{ _x setUnitPos "AUTO" } forEach _units
+; Update objective marker
+_mrkr setMarkerType "empty"
+call loadfile "SQCTL\orders\setStatus.sqf"
+; Update current order
+;_sqArr set [3, [_order,[-1]]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+player sidechat format [localize "STR_SQCTL_ORDERMOUNT",_name,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGER"
+exit
+
+#10
+; DISMOUNT
+call loadfile "SQCTL\orders\setStatus.sqf"
+; Issue order
+_cargo = []
+_veh = objNull
+{ _veh = vehicle _x; if (_veh != _x and driver _veh != _x and gunner _veh != _x and commander _veh != _x) then { _cargo set [count _cargo, _x] } } forEach units _sqd
+_cargo allowGetIn false 
+; Update objective marker
+_mrkr setMarkerType "empty"
+; Update current order
+;_sqArr set [3, [_order,[-1]]]
+; Radio message
+?(_mode == "group" and !_ldrGrp): exit
+?(_mode == "group"): _name = ((SQCTL select 6) select _grp) select 0
+player sidechat format [localize "STR_SQCTL_ORDERDISMOUNT",_name,_radForm]
+~1
+(leader _sqd) sidechat localize "STR_SQCTL_ROGER"
+exit

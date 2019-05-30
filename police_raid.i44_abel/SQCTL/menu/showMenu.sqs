@@ -1,0 +1,38 @@
+; SHOW SQUAD CONTROL MENU
+
+@(SQCTL select 0)
+
+hint ""
+createDialog "SQCTL_MENU"
+
+_showMap = SQCTL select 1
+if (_showMap) then { [] exec "SQCTL\map\showMap.sqs" } else { [] exec "SQCTL\map\hideMap.sqs" }
+
+; Hide header text
+ctrlShow [1, false]
+
+; Clean the squad and menu cards
+[] exec "SQCTL\menu\cleanCards.sqs"
+
+; Hide manage menu
+[] exec "SQCTL\manage\hideManager.sqs"
+
+; Hide orders menu
+[] exec "SQCTL\orders\hideOrders.sqs"
+
+; Options button
+ctrlShow [903, false]
+
+; Player's group management button
+_idc = 14
+if !(SQCTL select 7) then { ctrlShow [_idc, false] } else { ctrlShow [_idc, true] }
+ctrlSetText [_idc, "HQ"]
+_action = format [{[%1,%2,"%3","HQ"] exec "SQCTL\manage\manage.sqs"},50, -1, (SQCTL select 50) select 1]
+buttonSetAction [_idc, _action]
+
+; Init menu updater
+if !(SQCTL select 7) then { [] exec "SQCTL\menu\updateMenu.sqs" } else { [] exec "SQCTL\menu\updateMenuGrps.sqs" }
+
+;[1,3] exec "SQCTL\menu\blinkCard.sqs"
+
+exit

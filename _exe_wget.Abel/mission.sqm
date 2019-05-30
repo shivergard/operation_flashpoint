@@ -1,0 +1,51 @@
+version=11;
+class Mission
+{
+	randomSeed=12423683;
+	class Intel
+	{
+	};
+	class Groups
+	{
+		items=1;
+		class Item0
+		{
+			side="WEST";
+			class Vehicles
+			{
+				items=1;
+				class Item0
+				{
+					position[]={9780.439453,27.944723,4007.697754};
+					id=0;
+					side="WEST";
+					vehicle="SoldierWB";
+					player="PLAYER COMMANDER";
+					leader=1;
+					skill=0.600000;
+				};
+			};
+		};
+	};
+};
+class Intro
+{
+	randomSeed=644611;
+	class Intel
+	{
+	};
+};
+class OutroWin
+{
+	randomSeed=9532931;
+	class Intel
+	{
+	};
+};
+class OutroLoose
+{
+	randomSeed=2839043;
+	class Intel
+	{
+	};
+};

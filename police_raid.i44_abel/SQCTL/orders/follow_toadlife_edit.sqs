@@ -1,0 +1,138 @@
+_ldrSq = _this select 0
+_followSq = _this select 1
+_dis = _this select 2
+_degree = _this select 3
+_leeway = _this select 4
+_checkinterval = _this select 5
+_formation = _this select 6
+_behaviour = _this select 7
+_position = _this select 8
+_point = if (count _this > 9) then { _this select 9 } else { false }
+
+
+{_sq = ((SQCTL select _x) select 0); _sq setformation _formation; _sq setbehaviour _behaviour} foreach _followSq + _ldrSq
+~0.1
+?(_position == "crouch"): { {_x SwitchMove "CombatToCrouch"}forEach units ((SQCTL select _x) select 0)} foreach _followSq + _ldrSq, _position = "up" 
+~0.1
+{{_x setunitpos _position}forEach units ((SQCTL select _x) select 0)} foreach _followSq + _ldrSq
+~0.1
+
+_scriptID = random 1
+_sqdsInForm = SQCTL select 4
+_formIndex = -1; _c = 0; { if ((_ldrSq select 0) in _x and _formIndex < 0) then { _formIndex = _c }; _c = _c + 1 } forEach _sqdsInForm
+~0.1
+?(_formIndex < 0): exit
+_formArr = (_sqdsInForm select _formIndex)
+[_formArr, 0, _scriptID] call f_listInsert;
+
+_ldr = vehicle leader ((SQCTL select (_ldrSq select 0)) select 0)
+_fllw = vehicle leader ((SQCTL select (_followSq select 0)) select 0)
+
+_prevLdrPos = getPos _ldr
+_prevLdrDir = getDir _ldr
+
+goto "move"
+;~1
+
+#check
+; Make sure this formation is still relevant
+_sqdsInForm = SQCTL select 4
+_formIndex = -1; _c = 0; { if ((_ldrSq select 0) in _x and _formIndex < 0) then { _formIndex = _c }; _c = _c + 1 } forEach _sqdsInForm
+~0.1
+?(_formIndex < 0): exit
+
+; Update the formation array with current values
+_formArr = (_sqdsInForm select _formIndex)
+_retScriptID = _formArr select 0
+?(_retScriptID != _scriptID): goto "end"
+;?(_retScriptID != _scriptID):exit
+_ldrSq = [_formArr select 1]
+_followSq = _formArr - (_ldrSq + [_retScriptID])
+;player globalchat format ["_retScriptID: %1",_retScriptID]
+;player globalchat format ["_formArr: %1",_formArr]
+;player globalchat format ["_sqdsInForm: %1",_sqdsInForm]
+?(count _followSq == 0): goto "end"
+?(count _ldrSq == 0 and count _followSq == 1): goto "end"
+?(count _ldrSq == 0): _ldrSq = [_followSq select 0], _followSq = _followSq - _ldrSq
+
+;player globalchat format ["_ldrSq: %1",_ldrSq]
+;player globalchat format ["_followSq: %1",_followSq]
+
+_degree = _this select 3
+
+{_sqUnits = units ((SQCTL select _x) select 0); _aliveCount = {alive _x} count _sqUnits; if (_aliveCount == 0) then {_followSq = _followSq - [_x]}} foreach _followSq
+~0.1
+{_sqUnits = units ((SQCTL select _x) select 0); _aliveCount = {alive _x} count _sqUnits; if (_aliveCount == 0) then {_ldrSq = _ldrSq - [_x]}} foreach _ldrSq
+~0.1
+
+?(count _followSq == 0):exit
+?(count _ldrSq == 0 and count _followSq == 1):exit
+?(count _ldrSq == 0): _ldrSq = [_followSq select 0], _followSq = _followSq - _ldrSq
+
+_ldr = vehicle leader ((SQCTL select (_ldrSq select 0)) select 0)
+_fllw = vehicle leader ((SQCTL select (_followSq select 0)) select 0)
+_prevLdrDir = if ([getPOs _ldr,_prevLdrPos] call distancePos > _leeway) then { getDir _ldr } else { _prevLdrDir }
+
+_dis = (10 * (count units group _ldr)) + 10
+
+
+?((_ldr distance _fllw) > (_dis + _leeway)/2): goto "move"
+;?((_ldr distance _fllw) > (_dis + _leeway)/2 and _formation == "VEE"): goto "move"
+?((_ldr distance leader _fllw) < ((_dis + _leeway) * 0.5)): goto "move"
+~_checkinterval
+goto "check"
+
+#move
+_lpos = getpos _ldr
+_ldir = _prevLdrDir
+_lposx = _lpos select 0
+_lposy = _lpos select 1
+
+
+_dis = (10 * (count units group _ldr)) + 10
+;player globalchat format ["_dis: %1",_dis]
+
+_deg = _degree
+_pointSqd = if (_point) then { [_followSq  select 0] } else { [] }
+_trailerSqds = _followSq - _pointSqd
+_sq = grpNull
+
+?(_point): { _sq = (SQCTL select _x) select 0; _degree = 0; _moveto = [_lposx + ((sin (_ldir + _degree)) * (_dis)), _lposy + ((cos (_ldir + _degree)) * (_dis)), 0]; _sq Move _moveto; } foreach _pointSqd
+
+_c = 1
+_degree = _deg
+_column = if (_formation == "COLUMN" or _formation == "STAG COLUMN") then { true } else { false }
+_nextRow = 1
+{ _sq = (SQCTL select _x) select 0; _moveto = [_lposx + ((sin (_ldir + _degree)) * (_dis*_nextRow)), _lposy + ((cos (_ldir + _degree)) * (_dis*_nextRow)), 0]; _sq Move _moveto; if ((((_c mod 2) == 0 and _c > 1) or _column) and _formation != "LINE") then { _nextRow = _nextRow + 1 }; if (!_column) then { _degree = -_degree; _dis = _dis + 10; } else { _dis = _dis - 10; }; _c = _c + 1;  } foreach _trailerSqds
+
+_prevLdrPos = getPos _ldr
+
+~2
+goto "check"
+
+#end
+(SQCTL select 4) set [_formIndex,-1]
+SQCTL set [4, (SQCTL select 4) - [-1]]
+exit
+
+; THIS IS A HEAVILY EDITED VERSION OF TOADLIFE'S ORIGINAL "FORMATION EXTENDED" 
+; SCRIPT.
+; THE INFORMATION BELOW MIGHT NOT BE RELEVANT ANYMORE
+;
+; This script will cause unit or group of units to follow another unit or group of units without joining
+; any group
+
+; Initialize this script with the string below:
+; [[leaders],[followers],distance,degree,leeway,checkinterval,behaviour,position] exec "follow_toadlife_extended.sqs"
+;
+; ** [leaders] = an array of units which will be followed, can be only one unit. Must be in array format!
+; ** Example: [soldier1,soldier2,soldier3]
+; ** [followers] = an array of units that will follow the leaders, can be only one unit. Must be in array format!
+; ** Example: [man1,man2,man3]
+; ** distance = Distance followers must stay from leaders
+; ** degree = position relative to leaders followers will stay relative to the direction the leader is facing
+; ** Example: 0 = directly in front of leader / 90 to the right of leader
+; ** leeway = distance followers can be from their currently assigned position before they must move again
+; ** checkinterval = how often the followers check their position releative to the leaders position
+; ** behaviour = the behaviour of the followers {"careless", "safe", "aware", "combat", "stealth"}
+; ** position = position the followers will assume {"auto", "up", "crouch","down"}

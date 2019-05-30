@@ -1,0 +1,17 @@
+logisticsStatus = "out"
+
+hint "Raid Prepare Started"
+
+zerg sidechat "Preparing for RAID Squads"
+
+~10
+
+#startRaid
+
+
+sqds = [SQCTL, 51, (count SQCTL) - 51] call f_listSlice;
+({ [_x] exec "raid\mount.sqs" } forEach sqds)
+;({ player sidechat (format ["Total Raid Groups Avaliable:%1 ",  _x  ]) } forEach SQCTL)
+~10
+
+goto "startRaid"

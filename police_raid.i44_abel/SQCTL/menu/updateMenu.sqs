@@ -1,0 +1,160 @@
+; UPDATE SQUAD CONTROL MENU
+
+; Update SQ/GRP button control
+SQCTL set [7, false]
+_idc = 904
+_text = if !(SQCTL select 7) then { localize "STR_SQCTL_GROUPS" } else { localize "STR_SQCTL_SQUADS" }
+ctrlSetText [_idc, _text] 
+_action = {[] exec "SQCTL\menu\updateMenuGrps.sqs"}
+buttonSetAction [_idc, _action]
+
+; Clean the squad and menu cards
+[] exec "SQCTL\menu\cleanCards.sqs"
+
+; Hide orders menu
+[] exec "SQCTL\orders\hideOrders.sqs"
+
+; Hide manager
+[] exec "SQCTL\manage\hideManager.sqs"
+
+; Show filter list
+[] exec "SQCTL\menu\filter.sqs"
+
+; Show player button
+ctrlShow [14, true]
+
+~0.3
+
+; Set scroll buttons
+; Previous
+_idc = 901
+_action = {["previousSQ"] exec "SQCTL\menu\navButtons.sqs"}
+buttonSetAction [_idc, _action]
+; Next
+_idc = 902
+_action = {["nextSQ"] exec "SQCTL\menu\navButtons.sqs"}
+buttonSetAction [_idc, _action]
+
+_wait = 0.5
+#loop
+_filterIndex = (SQCTL select 8)
+_sqdsStartIndex = 51
+_arr = [SQCTL, _sqdsStartIndex, ((count SQCTL) - _sqdsStartIndex)] call f_listSlice;
+_indArr = []
+?(_filterIndex >= 0): _tmpArr = [], _c = 0, { if ((_x select 5) == _filterIndex) then { _tmpArr set [count _tmpArr,_x]; _indArr set [count _indArr, _c] }; _c = _c + 1 } forEach _arr, _arr = _tmpArr
+_card = 1
+_minSqInd = 0
+_maxSqInd = count _arr
+_maxRow = 7
+_i = (SQCTL select 5) select 0
+_sQi = _minSqInd + _i
+?(_sQi < _minSqInd): _sQi = _minSqInd
+_orders = call loadfile "SQCTL\orders\orders.sqf"
+_grpTypes = call loadfile "SQCTL\fu\squadTypes.sqf"
+
+	#fill
+	_idc = (_card*10)
+	_idc1 = _idc + 1
+	_idc2 = _idc + 2
+	_idc3 = _idc + 3
+	
+	?(_sQi >= _maxSqInd): goto "cleanEmpty"
+	
+	_sqArr = _arr select _sQi
+	_sqArrInd = if (count _indArr > 0) then { _indArr select (_card - 1) } else { _sQi }
+	_sqArrInd = _sqArrInd + (_sqdsStartIndex)	
+	_sq = _sqArr select 0
+	_name = _sqArr select 1
+	_origCount = _sqArr select 2
+	_grpCount = count units _sq
+	_order = (_sqArr select 3) select 0
+	_grp = _sqArr select 5
+	_destroyed = false
+	
+	ctrlShow [_idc, true]
+	;player sidechat format ["_card: %1 %2",_idc,ctrlVisible _idc]
+		
+; 		Check group health
+		_units = units _sq
+		_wounded = 0
+		_gC = 0
+		#next
+		_u = _units select _gC
+		?(!canStand _u or damage _u >= 0.5): _wounded = _wounded + 1
+		_gC = _gC + 1
+		?(_gC < _grpCount): goto "next"
+		
+		?((_origCount-_grpCount) == _origCount): _destroyed = true
+		?(!_destroyed): ctrlShow [_idc3, true]
+		
+;		Set group name and grouping
+		ctrlSetText [_idc1, _name]
+		
+; 		Set name button action
+		_action = if (!_destroyed) then { format [{[%1,%2,"%3"] exec "SQCTL\manage\manage.sqs"},_sqArrInd, _grp, ctrlText _idc1] } else { "" }
+		buttonSetAction [_idc1, _action]
+
+		
+; 		Create status string
+		_txt = ""
+		
+; 		Tag squad as destroyed if all killed
+		?(_destroyed): goto "destroyed"
+
+; 		Current order
+		?(_order > 0): _txt = _txt + format ["%1\n",(_orders select _order) select 1]
+
+; 		Grouping
+		?(_grp > 0): _txt = _txt + format ["(%1)\n",((SQCTL select 6) select _grp) select 0]
+		
+; 		Type of squad
+		_grpType = [_sq] call classifySquad
+		_type = (_grpTypes select _grpType) select 0
+		_txt = _txt + format ["%1\n",_type]
+		
+; 		Vehicles
+		;_veh = [_sq] call squadVehicles
+		;?(_veh != ""): _txt = _txt + format ["%1\n",_veh]
+		
+; 		Position
+		;_grid = getpos (leader _sq) call f_pos2grid;
+		;_txt = _txt + "Pos: " + _grid + "\n"
+
+; 		Size, Wounded and killed
+		_txt = _txt + format ["%1(%2) (%3W:%4K)\n",_grpCount,_origCount,_wounded,_origCount-_grpCount]
+		
+; 		Set status string
+		ctrlSetText [_idc2, _txt] 
+		
+; 		Set button action
+		ctrlSetText [_idc3, localize "STR_SQCTL_ORDER"]
+		_action = format [{[%1] exec "SQCTL\orders\orders.sqs"},_sqArrInd]
+		buttonSetAction [_idc3, _action]
+		goto "add"
+		
+		#cleanEmpty
+		; Clean empty cards
+		ctrlShow [_idc, false]
+		ctrlSetText [_idc1, ""]
+		ctrlSetText [_idc2, ""]
+		ctrlSetText [_idc3, ""]
+		ctrlShow [_idc3, false]
+	
+	#add
+	_sQi = _sQi + 1
+	_card = _card + 1
+	?(_card <= _maxRow): goto "fill"
+	
+	~_wait
+?(ctrlVisible 0 and !(SQCTL select 7) and alive player): goto "loop"
+
+exit
+
+#destroyed
+_txt = _txt + localize "STR_SQCTL_NOMEN"
+ctrlSetText [_idc2, _txt] 
+ctrlSetText [_idc3, ""]
+ctrlShow [_idc3, false]
+; Remove squad from group
+_sqArr set [5,0]
+goto "add"

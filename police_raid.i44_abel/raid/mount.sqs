@@ -1,0 +1,19 @@
+_x = _this select 0
+
+;zerg sidechat (format ["Total Raid Groups Avaliable:%1 ", _x select 1 ])
+
+? (_x select 1) != "Logistics" && logisticsStatus != "in" : exit ;
+
+zerg sidechat (format ["%1 Detected , Start Gathering Troops %2", _x select 1 , logisticsStatus ]);
+
+? (_x select 1) == "Logistics" : _logistics = _x
+? (_x select 1) == "Logistics" : logisticsStatus = "in"
+
+? (_x select 1) == "Logistics" : hint(format ["AllGroupData : %1" , _logistics])
+
+_trSqdArr = _x select 0
+_trSqd = _trSqdArr select 0
+_trSqName = _trSqdArr select 1
+_sqdUnits = count units _trSqd
+
+[((units (_logistics select 1)) select 0) ] join ( group (units (_x select 1)))

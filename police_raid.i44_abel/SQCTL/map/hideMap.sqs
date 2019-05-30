@@ -1,0 +1,20 @@
+; HIDE MAP CONTROLS
+
+; Set show/hide map button text
+_idc = 2
+ctrlSetText [_idc, localize "STR_SQCTL_SHOWMAP"]
+_action = {[] exec "SQCTL\map\showMap.sqs"}
+buttonSetAction [_idc, _action]
+
+; Hide map controls
+ctrlShow [3, false]
+ctrlShow [4, false]
+ctrlShow [5, false]
+ctrlShow [6, false]
+ctrlShow [7, false]
+ctrlShow [8, false]
+
+; Update show map
+SQCTL set [1,false]
+
+exit

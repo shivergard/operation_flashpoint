@@ -1,0 +1,31 @@
+; HIDE ORDERS
+
+; Hide orders menu
+ctrlShow [200, false]
+ctrlShow [201, false]
+ctrlShow [202, false]
+ctrlShow [203, false]
+ctrlShow [204, false]
+ctrlShow [205, false]
+ctrlShow [206, false]
+ctrlShow [207, false]
+ctrlShow [208, false]
+ctrlShow [209, false]
+ctrlShow [210, false]
+ctrlShow [211, false]
+ctrlShow [212, false]
+ctrlShow [213, false]
+ctrlShow [214, false]
+
+; Reset row selections
+lbSetCurSel [202, 0]
+lbSetCurSel [204, 0]
+lbSetCurSel [207, 0]
+lbSetCurSel [209, 0]
+lbSetCurSel [211, 0]
+
+; Hide objective marker
+_mrkr = "SQCTL_obj"
+_mrkr setMarkerType "empty"
+
+exit
